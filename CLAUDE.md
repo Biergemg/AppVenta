@@ -1,6 +1,17 @@
+---
+contract_version: 1
+last_updated: 2026-07-19
+changed_by: initialization
+---
+
 # Sistema POS de Evento — 2 Sedes (Bebidas + Inflable)
 
 Eres el desarrollador de este proyecto. Construye TODO lo descrito aquí sin pedir confirmación por módulo; solo pregunta si falta un dato bloqueante (ej. llaves de Supabase). Sigue las fases en orden. Este documento es la única fuente de verdad.
+
+> **Nota de trazabilidad (advanced-ai-dev-skill):** las secciones de contrato técnico
+> (Stack, Comandos, Reglas, Baseline, etc.) están al final de este archivo, después
+> de la sección 8, para no romper la numeración del spec original de negocio. Léelas
+> también — son parte del mismo contrato.
 
 ## 1. Contexto
 
@@ -109,3 +120,96 @@ Dos botones gigantes: Frente A / Frente B. Se guarda en localStorage con opción
 
 1. Repo en GitHub → conectar en Vercel → variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en el panel de Vercel.
 2. Entregar al final un `LEEME.md` en español simple: cómo abrir la app en cada celular, cómo agregarla a la pantalla de inicio (Android/iPhone), y qué hacer si no hay internet.
+
+---
+
+# Contrato técnico (advanced-ai-dev-skill)
+
+> Agregado tras F1, cuando el stack real ya existía para poder leerlo en vez de
+> inventarlo. Ver también AGENTS.md, HANDOVER.md, .ai-context/session-context.md,
+> AI-WORKFLOW.md, tooling-compatibility.md y ai-risk-register.md en la raíz.
+
+## Tech Stack
+
+> Fuente: package.json (leído, no asumido).
+
+- Runtime: Node.js v22.17.1 (según `node -v` en la máquina de desarrollo; no hay `.nvmrc`)
+- Framework: Next.js 16.2.10 (App Router, Turbopack), React 19.2.4
+- Estilos: Tailwind CSS ^4 (`@tailwindcss/postcss`)
+- Base de datos: Supabase (Postgres), cliente `@supabase/supabase-js` ^2.110.7
+- Testing: ninguno configurado todavía (no hay Jest/Vitest instalado — F1 no incluyó tests)
+- Linting: ESLint ^9 con `eslint-config-next` 16.2.10 (`eslint.config.mjs`)
+- Tipos: TypeScript ^5
+
+## Critical Commands
+
+```bash
+# Instalar dependencias
+npm install
+
+# Levantar servidor de desarrollo (Turbopack elige puerto libre si 3000 está ocupado)
+npm run dev
+
+# Compilar para producción
+npm run build
+
+# Lint
+npm run lint
+
+# No hay "npm test" — no hay tests configurados aún
+```
+
+## No-Guessing Rules
+
+- Si no has leído el archivo, no sabes qué contiene. Léelo primero.
+- Si un nombre de campo, firma de función o tipo no está confirmado por un archivo
+  que realmente leíste, no lo uses.
+- Si falta información, pregunta. No asumas.
+- "El usuario ya explicó el contexto" no equivale a leer el archivo.
+- Los nombres de tablas/columnas de Supabase están en `supabase/schema.sql` — esa
+  es la única fuente de verdad del esquema, no la memoria ni el spec de arriba
+  (el spec de arriba es la intención de negocio; el `.sql` es lo que existe).
+
+## Files Prohibited from Modification Without Explicit Approval
+
+- `.env.local` y cualquier `*.env*` real con llaves (nunca commitear; `.env.local.example` sí se versiona)
+- `supabase/schema.sql` una vez que haya datos reales de producción cargados con ese esquema (cambios = migración, no edición directa)
+- `.git/hooks/pre-commit` (mantiene `.ai-context/session-context.md` actualizado)
+
+## Naming Conventions
+
+> Leído del código existente, no inventado.
+
+- Archivos de componentes: PascalCase (`BottomNav.tsx`, `SedeGate.tsx`)
+- Archivos de utilidades/lib: camelCase (`sede.ts`, `useSede.ts`, `supabase.ts`)
+- Rutas de páginas: minúsculas, una carpeta por ruta (`src/app/(tabs)/vender/page.tsx`)
+- Tablas/columnas Supabase: snake_case, en español cuando el spec de negocio ya las nombra así (`inventario_mov`, `producto_id`)
+- Tests: ninguno todavía; cuando se agreguen, `*.test.ts` junto al archivo que prueban
+
+## Baseline (Established: 2026-07-19)
+
+```
+baseline_warnings: 0        (npm run lint, F1, 0 warnings/errors)
+baseline_complexity: no medido (no hay herramienta de complejidad ciclomática configurada)
+baseline_test_count: 0      (no hay tests todavía)
+```
+
+## Communication Style (Minimalist Mode)
+
+- Salidas breves, sin relleno conversacional ni repetición del prompt.
+- Español mexicano coloquial en todo lo visible al usuario final dentro de la app (sección 3); en la comunicación con el desarrollador (este chat), directo y sin rodeos.
+- Excepción: cadenas de evidencia (`evidence_chain`) y resultados de gates se muestran completos, no se resumen.
+
+## Active MCP Servers
+
+| Server | Scope | Purpose | Verified On |
+|--------|-------|---------|-------------|
+| engram | user (CLI en PATH + MCP) | Memoria persistente entre sesiones | 2026-07-19 |
+
+## Notes and Decisions
+
+[2026-07-19] Decision: proyecto creado en carpeta temporal minúscula (`pos-evento-tmp`) y movido a `AppVenta/` porque `create-next-app` rechaza mayúsculas en el nombre del paquete al usar `.` directamente — Reason: limitación de npm naming, no de este proyecto.
+[2026-07-19] Decision: `package.json.name` = `"pos-evento"` — Reason: nombre de paquete válido, el nombre de carpeta (`AppVenta`) es solo el directorio.
+[2026-07-19] Decision: `.env.local` se crea con valores placeholder hasta que el usuario cree su proyecto Supabase y entregue URL + anon key — Reason: dato bloqueante identificado explícitamente por este mismo documento (línea 3); el usuario confirmó que tiene cuenta pero no proyecto creado.
+[2026-07-19] Decision: RLS deshabilitado en las 5 tablas de `supabase/schema.sql` — Reason: sección 2 del spec establece que no hay login, la URL no pública es la única protección; con RLS activo sin políticas, la anon key no podría leer/escribir nada.
+[2026-07-19] Decision: se instaló git localmente (antes no existía) para poder usar el pre-commit hook y `.ai-context/session-context.md` de advanced-ai-dev-skill — Reason: el usuario pidió trazabilidad estricta vía esta skill; no se ha hecho push a ningún remoto (eso es F7/sección 8, pendiente).
