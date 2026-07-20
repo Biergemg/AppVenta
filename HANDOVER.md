@@ -179,3 +179,20 @@ Verificacion:
 - Playwright local en viewport movil 390x844: pantalla inicial, Vender e Inflable revisadas visualmente; sin traslapes relevantes. El circulo negro visto en capturas es overlay de Next dev, no produccion.
 
 Nota: se agrego dependencia `lucide-react` para iconos.
+
+---
+
+## Actualizacion 2026-07-20 - preview premium al compartir link
+
+Pedido: que al compartir `https://app-venta.vercel.app/` por WhatsApp/Facebook se vea como tarjeta premium y no solo link plano.
+
+Cambios:
+- `src/app/layout.tsx`: metadataBase, Open Graph y Twitter Card con titulo, descripcion e imagen grande.
+- `src/app/opengraph-image.tsx`: imagen PNG 1200x630 generada por Next para preview social.
+- `public/robots.txt`: `Allow: /` para que crawlers sociales puedan leer la metadata. Se conserva `robots.index=false` en metadata para no indexar en buscadores.
+
+Verificacion:
+- `npm run lint` PASS.
+- `npm run build` PASS.
+
+Nota: WhatsApp/Facebook cachean previews; si muestran el preview viejo, esperar unos minutos o volver a compartir tras el redeploy.
