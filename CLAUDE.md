@@ -58,6 +58,8 @@ caja_mov(id, sede smallint, tipo text,                    -- 'fondo' | 'retiro'
 tiempos(id, sede smallint, nino text, responsable text,
         inicio timestamptz, minutos int, estado text,     -- 'activo' | 'terminado'
         ts timestamptz)
+precios_inflable(id, minutos int unique, precio numeric nullable, -- NULL = sin definir todavía
+                  activo bool default true, creado timestamptz)   -- seed: 15/30/45/60 min
 ```
 
 **Reglas de cálculo (siempre al vuelo, nunca almacenadas):**
@@ -76,7 +78,8 @@ Dos botones gigantes: UNIDEP Tampico / Parque Méndez. Se guarda en localStorage
 - **Cobrar** abre pantalla de pago: total gigante + botones "Exacto / $50 / $100 / $200 / $500" + campo libre. Muestra la **FERIA en número gigante**. Confirmar guarda la venta (con costo snapshot, pago_con, cambio) y descuenta el ticket completo en una sola transacción.
 
 ### 5.3 Inflable
-- Botón "Registrar niño": nombre del niño, nombre/teléfono del responsable, botones "30 min $X" / "60 min $Y" → cobra en el acto (misma pantalla de feria) y arranca el timer. El precio del tiempo se define en Ajustes.
+- Botón "Registrar niño": nombre del niño, nombre/teléfono del responsable, botones de duración **15 / 30 / 45 / 60 min**, cada uno mostrando su precio (`$X`) → cobra en el acto (misma pantalla de feria) y arranca el timer. Los 4 precios se definen en Ajustes (tabla `precios_inflable`, editable como el inventario — nombre/costo/precio aún no están confirmados por el dueño, así que arrancan sin precio y no se pueden usar hasta que se les ponga uno; esto no bloquea el resto de la app).
+- "+30 min" (extensión) usa el precio ya definido para 30 min de esa misma tabla; si algún botón de duración no tiene precio todavía, se muestra gris/deshabilitado con texto "Falta precio" en vez de bloquear toda la pantalla.
 - Lista de tarjetas ordenadas por tiempo restante: nombre grande + cuenta regresiva + barra de color (verde → amarillo a 5 min → rojo vencido).
 - Botones por tarjeta: "+30 min" (cobra extensión) y "Ya salió" (termina).
 - **Alarmas SOLO de mi sede**: sonido (Web Audio, tono generado, sin archivos externos) + vibración + tarjeta roja parpadeando al llegar a 0, y aviso amarillo a los 5 min. Los tiempos de la otra sede se ven en una sección aparte "Otra sede" SIN alarma ni sonido.
@@ -99,7 +102,7 @@ Dos botones gigantes: UNIDEP Tampico / Parque Méndez. Se guarda en localStorage
 - **Alta de producto en una sola tarjeta**: nombre, **costo de compra**, **precio de venta** (la app muestra en vivo la ganancia por pieza y el % de margen al teclear), stock inicial en UNIDEP Tampico y en Parque Méndez. Guardar = producto listo para vender. El flujo completo debe tomar <20 segundos por producto.
 - "Entrada de mercancía": producto + cantidad + sede (para resurtidos a media jornada).
 - Editar precio/costo (afecta solo ventas futuras), desactivar producto.
-- Precios del inflable (30 min, 60 min, extensión) y nombres de las sedes.
+- Precios del inflable: tabla `precios_inflable` con las 4 duraciones (15/30/45/60 min), editable igual que un producto (nombre = duración, precio libre, sin costo/margen porque no hay costo de compra). "+30 min" reutiliza el precio de 30 min. Nombres de las sedes ya fijos (UNIDEP Tampico / Parque Méndez, sección 1) — no requieren edición salvo que el usuario pida cambiarlos.
 - Botón "Borrar todo y empezar de cero" con doble confirmación.
 
 ## 6. Fases de construcción (ejecutar en este orden, commit por fase)
@@ -221,3 +224,5 @@ baseline_test_count: 0      (no hay tests todavía)
 [2026-07-19] Decision: se instaló git localmente (antes no existía) para poder usar el pre-commit hook y `.ai-context/session-context.md` de advanced-ai-dev-skill — Reason: el usuario pidió trazabilidad estricta vía esta skill; no se ha hecho push a ningún remoto (eso es F7/sección 8, pendiente).
 [2026-07-19] Decision: nombres reales de sede confirmados — Sede A = "UNIDEP Tampico", Sede B = "Parque Méndez"; evento = Festival Nacional Minibasket 2026 MX, Tampico Tamaulipas, 22–26 de julio de 2026 — Reason: usuario compartió el póster del evento y 2 links de Google Maps (`share.google/oWAHFcFMPlNHjam04` → resuelve a búsqueda "unidep tampico"; `share.google/6wqnDVH8E86xSuiK8` → resuelve a búsqueda "parque mendez"). **Advertencia de urgencia:** hoy es 2026-07-19, el evento empieza en 3 días (2026-07-22) — F2 a F7 deben completarse antes de esa fecha, prioridad máxima a llaves de Supabase y alta de productos.
 [2026-07-19] Decision: repo remoto conectado en `git@github.com:Biergemg/AppVenta.git`, rama renombrada `master` → `main`, push inicial hecho (3 commits) — Reason: usuario dio la URL del repo y pidió commitear y pushear ahora. Deploy a Vercel sigue siendo manual: el usuario conecta el repo en Vercel una sola vez y desde ahí cada `git push` a `main` dispara un deploy automático (integración nativa de Vercel con GitHub, no requiere CLI ni acción del agente).
+[2026-07-19] Decision: NO se hará deploy a Vercel hasta que el usuario diga que todo está completo — Reason: usuario lo pidió explícitamente ("no lo haré hasta tener todo listo completo"); seguir commiteando/pusheando a `main` normalmente, pero no conectar/activar Vercel todavía.
+[2026-07-19] Decision: duraciones del inflable pasan de 30/60 min fijos a **15/30/45/60 min**, con precios editables en una tabla nueva `precios_inflable` (ver sección 4) en vez de hardcodeados — Reason: usuario no tiene confirmados los tiempos ni costos reales del inflable todavía; en vez de bloquear el desarrollo, se agregó la tabla ahora (antes de tener datos reales en Supabase, sin riesgo de migración) con las 4 duraciones sembradas y `precio = NULL` hasta que el usuario los defina en Ajustes. Un botón de duración sin precio se muestra deshabilitado, no rompe el resto de la app.

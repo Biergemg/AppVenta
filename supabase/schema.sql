@@ -22,6 +22,18 @@ create table if not exists inventario_mov (
   ts           timestamptz not null default now()
 );
 
+create table if not exists precios_inflable (
+  id       bigint generated always as identity primary key,
+  minutos  int not null unique,
+  precio   numeric,               -- NULL = precio aún no definido por el dueño
+  activo   boolean not null default true,
+  creado   timestamptz not null default now()
+);
+
+insert into precios_inflable (minutos, precio)
+values (15, null), (30, null), (45, null), (60, null)
+on conflict (minutos) do nothing;
+
 create table if not exists tiempos (
   id           bigint generated always as identity primary key,
   sede         smallint not null,
@@ -72,3 +84,4 @@ alter table inventario_mov disable row level security;
 alter table ventas disable row level security;
 alter table caja_mov disable row level security;
 alter table tiempos disable row level security;
+alter table precios_inflable disable row level security;
