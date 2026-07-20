@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f HANDOVER.md && printf '{\"systemMessage\": \"HANDOVER.md existe — léelo antes de continuar (advanced-ai-dev-skill).\"}' || true"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "engram save \"pre-compact-$(date -u +%Y%m%dT%H%M%SZ)\" \"Compactación de contexto iniciada. Ver HANDOVER.md y .ai-context/session-context.md para el estado exacto.\" --type discovery 2>/dev/null && printf '{\"systemMessage\": \"Estado guardado en Engram antes de compactar.\"}' || printf '{\"systemMessage\": \"Engram no disponible — actualiza HANDOVER.md manualmente antes de continuar.\"}'"
+          }
+        ]
+      }
+    ]
+  }
+}
