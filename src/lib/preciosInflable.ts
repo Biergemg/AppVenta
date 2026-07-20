@@ -26,3 +26,14 @@ export async function actualizarPrecioInflable(
     .eq("id", id);
   if (error) throw error;
 }
+
+export async function actualizarActivoPrecioInflable(
+  id: number,
+  activo: boolean
+): Promise<void> {
+  const { error } = await supabase
+    .from("precios_inflable")
+    .update({ activo })
+    .eq("id", id);
+  if (error) throw error;
+}

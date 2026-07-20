@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { actualizarPrecioInflable, type PrecioInflable } from "@/lib/preciosInflable";
+import {
+  actualizarActivoPrecioInflable,
+  actualizarPrecioInflable,
+  type PrecioInflable,
+} from "@/lib/preciosInflable";
 
 export default function PreciosInflable({
   precios,
@@ -42,8 +46,13 @@ function FilaPrecio({
     }
   }
 
+  async function toggleActivo() {
+    await actualizarActivoPrecioInflable(precio.id, !precio.activo);
+    onCambio();
+  }
+
   return (
-    <div className="flex items-center gap-3">
+    <div className={`flex items-center gap-3 ${precio.activo ? "" : "opacity-50"}`}>
       <span className="w-16 font-semibold">{precio.minutos} min</span>
       <input
         inputMode="decimal"
@@ -58,6 +67,12 @@ function FilaPrecio({
         className="min-h-12 px-4 rounded-lg bg-blue-600 text-white font-semibold disabled:opacity-50"
       >
         Guardar
+      </button>
+      <button
+        onClick={toggleActivo}
+        className="min-h-12 px-3 rounded-lg border border-zinc-300 text-sm font-semibold whitespace-nowrap"
+      >
+        {precio.activo ? "Desactivar" : "Activar"}
       </button>
     </div>
   );

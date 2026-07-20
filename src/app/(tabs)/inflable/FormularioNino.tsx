@@ -64,7 +64,9 @@ export default function FormularioNino({
       />
 
       <div className="grid grid-cols-2 gap-2">
-        {precios.map((p) => (
+        {precios
+          .filter((p) => p.activo)
+          .map((p) => (
           <button
             key={p.id}
             onClick={() => elegirDuracion(p)}
