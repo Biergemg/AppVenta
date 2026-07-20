@@ -144,3 +144,13 @@ Vercel:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 Despues de guardar esas variables, hacer redeploy. Si sigue en blanco, revisar logs de Vercel y consola del navegador.
+
+---
+
+## Actualizacion 2026-07-20 - URL oficial
+
+URL oficial de produccion: `https://app-venta.vercel.app/`.
+
+El usuario confirmo que no comprara dominio; esta URL de Vercel sera la oficial del evento. Verificado desde navegador: abre correctamente y muestra el selector de sede (UNIDEP Tampico / Parque Mendez), por lo que el deploy ya no esta en blanco.
+
+Siguiente paso: prueba operativa final en celular real con flujo completo de venta, inflable, caja y resumen.
