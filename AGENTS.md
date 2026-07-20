@@ -81,10 +81,10 @@ Si algo bloquea una fase (ej. falta de llaves de Supabase, decisión de negocio 
 
 | Field | Value |
 |-------|-------|
-| Current phase | F2 (Ajustes: alta rápida de productos) — no iniciada |
-| Last completed phase | F1 (scaffold Next.js + Tailwind + Supabase + selector de sede) |
-| Last completed on | 2026-07-19 |
-| Next action | Cuando el usuario entregue las llaves de Supabase: pegarlas en `.env.local`, correr `supabase/schema.sql` en el proyecto real, y arrancar F2 (formulario de alta de producto con margen en vivo) |
+| Current phase | F3 (Vender + pantalla de feria) — no iniciada |
+| Last completed phase | F2 (Ajustes: alta rápida de productos, entradas, precios de inflable) |
+| Last completed on | 2026-07-20 |
+| Next action | Construir la pantalla Vender: cuadrícula de productos (nombre, precio, stock restante de mi sede), ticket con +/-, botón Cobrar → pantalla de feria (Exacto/$50/$100/$200/$500 + campo libre), guardar venta con costo snapshot |
 | Blocking items | Ninguno — Supabase real conectado y verificado (lectura + escritura) el 2026-07-20 |
 | **Fecha límite real** | **Evento (Festival Nacional Minibasket 2026 MX) empieza 2026-07-22 en Tampico, Tamaulipas — hoy es 2026-07-19, quedan 3 días para F2–F7** |
 | Sedes reales | Sede A = UNIDEP Tampico, Sede B = Parque Méndez (confirmado 2026-07-19, ver CLAUDE.md sección 1 y Notes and Decisions) |

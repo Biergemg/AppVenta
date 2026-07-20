@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { borrarSede } from "@/lib/sede";
+import { listarProductos, type Producto } from "@/lib/productos";
+import { listarPreciosInflable, type PrecioInflable } from "@/lib/preciosInflable";
+import FormularioProducto from "./FormularioProducto";
+import ListaProductos from "./ListaProductos";
+import PreciosInflable from "./PreciosInflable";
 
 type Estado = "probando" | "ok" | "error";
 
@@ -11,6 +16,17 @@ export default function AjustesPage() {
   const router = useRouter();
   const [estado, setEstado] = useState<Estado>("probando");
   const [detalle, setDetalle] = useState("");
+  const [productos, setProductos] = useState<Producto[]>([]);
+  const [precios, setPrecios] = useState<PrecioInflable[]>([]);
+
+  const cargarDatos = useCallback(() => {
+    listarProductos()
+      .then(setProductos)
+      .catch(() => {});
+    listarPreciosInflable()
+      .then(setPrecios)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     let cancelado = false;
@@ -28,10 +44,12 @@ export default function AjustesPage() {
         }
       });
 
+    cargarDatos();
+
     return () => {
       cancelado = true;
     };
-  }, []);
+  }, [cargarDatos]);
 
   function cambiarSede() {
     borrarSede();
@@ -39,7 +57,7 @@ export default function AjustesPage() {
   }
 
   return (
-    <main className="flex flex-col gap-6 p-4">
+    <main className="flex flex-col gap-6 p-4 pb-8">
       <h1 className="text-xl font-bold">Ajustes</h1>
 
       <section className="rounded-2xl border p-4">
@@ -64,6 +82,10 @@ export default function AjustesPage() {
           </div>
         )}
       </section>
+
+      <FormularioProducto onGuardado={cargarDatos} />
+      <ListaProductos productos={productos} onCambio={cargarDatos} />
+      <PreciosInflable precios={precios} onCambio={cargarDatos} />
 
       <button
         onClick={cambiarSede}
