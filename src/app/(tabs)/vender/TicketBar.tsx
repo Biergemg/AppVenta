@@ -15,32 +15,37 @@ export default function TicketBar({
 }) {
   if (items.length === 0) {
     return (
-      <div className="sticky bottom-14 z-40 border-t bg-white p-3 text-center text-zinc-400">
+      <div className="sticky bottom-20 z-40 border-t border-[var(--line)] bg-white/95 p-4 text-center text-sm font-bold text-[var(--muted)] shadow-[0_-10px_24px_oklch(0.18_0.025_245_/_0.06)] backdrop-blur">
         Toca un producto para empezar la venta
       </div>
     );
   }
 
   return (
-    <div className="sticky bottom-14 z-40 border-t bg-white p-3 flex flex-col gap-2 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
-      <div className="max-h-60 overflow-y-auto flex flex-col gap-2">
+    <div className="sticky bottom-20 z-40 flex flex-col gap-3 border-t border-[var(--line)] bg-white/95 p-3 shadow-[0_-14px_30px_oklch(0.18_0.025_245_/_0.10)] backdrop-blur">
+      <div className="flex max-h-60 flex-col gap-2 overflow-y-auto">
         {items.map((l) => (
-          <div key={l.producto.id} className="flex items-center justify-between gap-2">
-            <span className="flex-1 font-semibold truncate">{l.producto.nombre}</span>
+          <div
+            key={l.producto.id}
+            className="soft-panel flex items-center justify-between gap-2 px-2 py-2"
+          >
+            <span className="min-w-0 flex-1 truncate font-bold">{l.producto.nombre}</span>
             <button
               onClick={() => onCambiarCantidad(l.producto.id, -1)}
-              className="w-14 h-14 shrink-0 rounded-lg bg-zinc-100 text-xl font-bold"
+              className="h-14 w-14 shrink-0 rounded-2xl bg-white text-xl font-black shadow-sm"
             >
-              −
+              -
             </button>
-            <span className="w-6 text-center tabular-nums font-semibold">{l.cantidad}</span>
+            <span className="w-7 text-center tabular-nums text-lg font-black">
+              {l.cantidad}
+            </span>
             <button
               onClick={() => onCambiarCantidad(l.producto.id, 1)}
-              className="w-14 h-14 shrink-0 rounded-lg bg-zinc-100 text-xl font-bold"
+              className="h-14 w-14 shrink-0 rounded-2xl bg-white text-xl font-black shadow-sm"
             >
               +
             </button>
-            <span className="w-16 text-right tabular-nums font-semibold">
+            <span className="w-20 text-right tabular-nums font-black text-[var(--primary-strong)]">
               ${(l.producto.precio_venta * l.cantidad).toFixed(2)}
             </span>
           </div>
@@ -49,7 +54,7 @@ export default function TicketBar({
 
       <button
         onClick={onCobrar}
-        className="min-h-14 rounded-2xl bg-blue-600 text-white text-lg font-bold flex items-center justify-center gap-2"
+        className="primary-action flex min-h-16 items-center justify-center gap-2 rounded-3xl text-xl font-black"
       >
         Cobrar · <span className="tabular-nums">${total.toFixed(2)}</span>
       </button>

@@ -50,8 +50,8 @@ export default function CajaPage() {
 
   if (!miTeorico) {
     return (
-      <main className="flex flex-col gap-4 p-4">
-        <h1 className="text-xl font-bold">Caja</h1>
+    <main className="app-page flex flex-col gap-4 p-4">
+        <h1 className="page-title">Caja</h1>
         <p className={errorCarga ? "text-red-700 font-semibold" : "text-zinc-500"}>
           {errorCarga || "Cargando…"}
         </p>
@@ -60,23 +60,28 @@ export default function CajaPage() {
   }
 
   return (
-    <main className="flex flex-col gap-6 p-4 pb-8">
-      <h1 className="text-xl font-bold">Caja</h1>
+    <main className="app-page flex flex-col gap-5 p-4 pb-8">
+      <div className="pt-1">
+        <h1 className="page-title">Caja</h1>
+        <p className="mt-1 text-sm font-medium text-[var(--muted)]">
+          Lo que debe haber fisicamente en esta sede.
+        </p>
+      </div>
 
       {errorCarga && (
-        <p className="rounded-xl bg-red-100 text-red-800 p-3 text-sm font-semibold">
+        <p className="rounded-2xl bg-[var(--danger-soft)] p-3 text-sm font-bold text-red-800">
           {errorCarga}
         </p>
       )}
 
       {toast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-xl bg-green-600 text-white px-4 py-2 font-semibold shadow-lg">
+        <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-2xl bg-[var(--primary)] px-4 py-3 font-black text-white shadow-lg">
           {toast}
         </div>
       )}
 
-      <section className="rounded-2xl border p-4 text-center">
-        <p className="text-zinc-500">Debes tener en la caja</p>
+      <section className="section-panel p-5 text-center">
+        <p className="mini-label">Debes tener en la caja</p>
         <p
           className={`text-4xl font-extrabold tabular-nums ${
             miTeorico.total >= 0 ? "text-green-700" : "text-red-700"
@@ -84,7 +89,7 @@ export default function CajaPage() {
         >
           ${miTeorico.total.toFixed(2)}
         </p>
-        <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-zinc-600 tabular-nums">
+        <div className="mt-4 grid grid-cols-2 gap-2 text-sm font-semibold text-[var(--muted)] tabular-nums">
           <p>Fondo: ${miTeorico.fondos.toFixed(2)}</p>
           <p>Retiros: −${miTeorico.retiros.toFixed(2)}</p>
           <p>Bebidas: ${miTeorico.ventasBebida.toFixed(2)}</p>
@@ -101,13 +106,13 @@ export default function CajaPage() {
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={() => setFormularioAbierto("fondo")}
-          className="min-h-14 rounded-2xl bg-blue-600 text-white font-bold"
+          className="primary-action min-h-16 rounded-3xl font-black"
         >
           Registrar fondo
         </button>
         <button
           onClick={() => setFormularioAbierto("retiro")}
-          className="min-h-14 rounded-2xl border border-zinc-300 font-bold"
+          className="secondary-action min-h-16 rounded-3xl font-black"
         >
           Retiro
         </button>

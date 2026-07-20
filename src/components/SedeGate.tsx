@@ -16,9 +16,17 @@ export default function SedeGate({ children }: { children: React.ReactNode }) {
   if (!sede) return null;
 
   return (
-    <div className="flex min-h-screen flex-col pb-14">
-      <header className="border-b bg-white px-4 py-2 text-sm font-semibold text-zinc-600">
-        {nombreSede(sede)}
+    <div className="flex min-h-screen flex-col bg-[var(--surface)] pb-20">
+      <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-white/95 px-4 py-3 backdrop-blur">
+        <div className="app-page flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase text-[var(--muted)]">Mi sede</p>
+            <p className="text-base font-black text-[var(--foreground)]">{nombreSede(sede)}</p>
+          </div>
+          <div className="rounded-full bg-[var(--success-soft)] px-3 py-1 text-xs font-black text-[var(--primary-strong)]">
+            Sede activa
+          </div>
+        </div>
       </header>
       <div className="flex-1">{children}</div>
     </div>

@@ -140,17 +140,22 @@ export default function InflablePage() {
   if (!sede) return null;
 
   return (
-    <main className="flex flex-col gap-6 p-4 pb-8">
-      <h1 className="text-xl font-bold">Inflable</h1>
+    <main className="app-page flex flex-col gap-5 p-4 pb-8">
+      <div className="pt-1">
+        <h1 className="page-title">Inflable</h1>
+        <p className="mt-1 text-sm font-medium text-[var(--muted)]">
+          Registra, cobra y deja que la alarma te avise.
+        </p>
+      </div>
 
       {errorCarga && (
-        <p className="rounded-xl bg-red-100 text-red-800 p-3 text-sm font-semibold">
+        <p className="rounded-2xl bg-[var(--danger-soft)] p-3 text-sm font-bold text-red-800">
           {errorCarga}
         </p>
       )}
 
       {wakeLockEstado === "rechazado" || wakeLockEstado === "no-soportado" ? (
-        <p className="rounded-xl bg-yellow-100 text-yellow-800 p-3 text-sm font-semibold">
+        <p className="rounded-2xl bg-[var(--warning-soft)] p-3 text-sm font-bold text-yellow-900">
           Mantén la pantalla prendida para que suene la alarma.
         </p>
       ) : null}
@@ -158,20 +163,20 @@ export default function InflablePage() {
       {!alarmaLista && (
         <button
           onClick={activarAlarma}
-          className="min-h-14 rounded-2xl bg-yellow-400 text-yellow-950 font-bold"
+          className="min-h-14 rounded-2xl bg-[var(--warning)] text-yellow-950 font-black shadow-sm"
         >
           Activar alarma
         </button>
       )}
 
       {alarmaBloqueada && (
-        <p className="rounded-xl bg-yellow-100 text-yellow-900 p-3 text-sm font-semibold">
+        <p className="rounded-2xl bg-[var(--warning-soft)] p-3 text-sm font-bold text-yellow-900">
           Toca el boton Activar alarma para que el celular permita el sonido.
         </p>
       )}
 
       {toast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-xl bg-green-600 text-white px-4 py-2 font-semibold shadow-lg">
+        <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-2xl bg-[var(--primary)] px-4 py-3 font-black text-white shadow-lg">
           {toast}
         </div>
       )}
@@ -179,7 +184,7 @@ export default function InflablePage() {
       <FormularioNino sede={sede} precios={precios} onRegistrado={cargar} />
 
       <section className="flex flex-col gap-3">
-        <h2 className="font-semibold">Mi sede ({nombreSede(sede)})</h2>
+        <h2 className="text-lg font-black">Mi sede ({nombreSede(sede)})</h2>
         {misTiempos.length === 0 && (
           <p className="text-zinc-500 text-sm">Nadie está en el inflable ahorita.</p>
         )}
@@ -196,8 +201,8 @@ export default function InflablePage() {
       </section>
 
       {otrosTiempos.length > 0 && (
-        <section className="flex flex-col gap-3 opacity-70">
-          <h2 className="font-semibold">Otra sede</h2>
+        <section className="flex flex-col gap-3 opacity-80">
+          <h2 className="text-lg font-black">Otra sede</h2>
           {otrosTiempos.map((t) => (
             <TarjetaTiempo key={t.id} tiempo={t} ahora={ahora} esMiSede={false} />
           ))}

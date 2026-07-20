@@ -57,27 +57,30 @@ export default function AjustesPage() {
   }
 
   return (
-    <main className="flex flex-col gap-6 p-4 pb-8">
-      <h1 className="text-xl font-bold">Ajustes</h1>
+    <main className="app-page flex flex-col gap-5 p-4 pb-8">
+      <div className="pt-1">
+        <h1 className="page-title">Ajustes</h1>
+        <p className="mt-1 text-sm font-medium text-[var(--muted)]">
+          Productos, inventario y precios del inflable.
+        </p>
+      </div>
 
-      <section className="rounded-2xl border p-4">
-        <h2 className="font-semibold mb-2">Conexión con Supabase</h2>
+      <section className="section-panel p-4">
+        <h2 className="mb-2 text-lg font-black">Conexion</h2>
         {estado === "probando" && (
-          <p className="text-zinc-500">Probando conexión…</p>
+          <p className="font-bold text-[var(--muted)]">Probando conexion...</p>
         )}
         {estado === "ok" && (
-          <p className="text-green-700 font-semibold">
-            ✓ Conectado. La app lee y escribe en Supabase correctamente.
+          <p className="font-bold text-green-700">
+            Conectado. La app lee y escribe correctamente.
           </p>
         )}
         {estado === "error" && (
           <div className="text-red-700">
-            <p className="font-semibold">Sin conexión a Supabase.</p>
+            <p className="font-black">Sin conexion a Supabase.</p>
             <p className="text-sm">{detalle}</p>
-            <p className="text-sm mt-2">
-              Revisa NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en
-              .env.local, y que hayas corrido supabase/schema.sql en tu
-              proyecto.
+            <p className="mt-2 text-sm">
+              Revisa las variables de Supabase en Vercel y que el SQL ya este cargado.
             </p>
           </div>
         )}
@@ -89,7 +92,7 @@ export default function AjustesPage() {
 
       <button
         onClick={cambiarSede}
-        className="min-h-14 rounded-2xl border border-zinc-300 text-lg font-semibold"
+        className="secondary-action min-h-14 rounded-2xl text-lg font-black"
       >
         Cambiar de sede
       </button>

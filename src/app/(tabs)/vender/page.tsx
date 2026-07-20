@@ -85,7 +85,14 @@ export default function VenderPage() {
   if (!sede) return null;
 
   return (
-    <div className="flex flex-col">
+    <div className="app-page flex flex-col">
+      <div className="px-4 pb-2 pt-5">
+        <h1 className="page-title">Vender</h1>
+        <p className="mt-1 text-sm font-medium text-[var(--muted)]">
+          Toca producto, revisa ticket y cobra.
+        </p>
+      </div>
+
       <div className="grid grid-cols-2 gap-3 p-4">
         {errorCarga && (
           <p className="col-span-2 text-red-700 font-semibold text-center py-8">
@@ -105,17 +112,27 @@ export default function VenderPage() {
               key={p.id}
               onClick={() => agregar(p)}
               disabled={agotado}
-              className={`min-h-24 rounded-2xl p-3 flex flex-col items-center justify-center gap-1 text-center ${
+              className={`min-h-28 rounded-3xl border p-3 flex flex-col items-center justify-center gap-1 text-center shadow-sm ${
                 agotado
-                  ? "bg-zinc-200 text-zinc-400"
-                  : "bg-blue-50 text-blue-900 active:bg-blue-100"
+                  ? "border-zinc-200 bg-zinc-100 text-zinc-400"
+                  : "border-[var(--line)] bg-white text-[var(--foreground)] active:bg-[var(--blue-soft)]"
               }`}
             >
-              <span className="font-bold text-lg leading-tight">{p.nombre}</span>
-              <span className="text-xl font-extrabold tabular-nums">
+              <span className="line-clamp-2 break-words text-lg font-black leading-tight">
+                {p.nombre}
+              </span>
+              <span className="text-2xl font-black tabular-nums text-[var(--primary-strong)]">
                 ${p.precio_venta.toFixed(2)}
               </span>
-              <span className="text-xs tabular-nums">
+              <span
+                className={`rounded-full px-2 py-0.5 text-xs font-bold tabular-nums ${
+                  agotado
+                    ? "bg-zinc-200 text-zinc-500"
+                    : disponible <= 3
+                      ? "bg-[var(--warning-soft)] text-yellow-900"
+                      : "bg-[var(--success-soft)] text-[var(--primary-strong)]"
+                }`}
+              >
                 {agotado ? "Agotado" : `Quedan ${disponible}`}
               </span>
             </button>

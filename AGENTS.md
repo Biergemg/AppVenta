@@ -81,10 +81,10 @@ Si algo bloquea una fase (ej. falta de llaves de Supabase, decisión de negocio 
 
 | Field | Value |
 |-------|-------|
-| Current phase | F7 (Pulido UX + Vercel) — deploy oficial verificado |
-| Last completed phase | F6 (Caja: fondo, retiros, corte con diferencia) + correcciones críticas F7 |
+| Current phase | F7 (Pulido UX + Vercel) — pulido visual premium verificado localmente |
+| Last completed phase | F7 visual premium: selector, nav, vender, inflable, resumen, caja y ajustes |
 | Last completed on | 2026-07-20 |
-| Next action | Prueba operativa final en celular real: elegir sede, vender producto, registrar inflable, revisar caja/resumen |
-| Blocking items | Ninguno en código local ni deploy: URL oficial `https://app-venta.vercel.app/` abre selector de sede |
+| Next action | Push dispara redeploy en Vercel; despues probar en celular real la URL oficial `https://app-venta.vercel.app/` |
+| Blocking items | Ninguno en codigo local: `npm run lint` y `npm run build` pasan tras pulido visual |
 | **Fecha límite real** | **Evento (Festival Nacional Minibasket 2026 MX) empieza 2026-07-22 en Tampico, Tamaulipas — quedan 2 días para F5–F7** |
 | Sedes reales | Sede A = UNIDEP Tampico, Sede B = Parque Méndez (confirmado 2026-07-19, ver CLAUDE.md sección 1 y Notes and Decisions) |

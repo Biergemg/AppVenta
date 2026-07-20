@@ -154,3 +154,28 @@ URL oficial de produccion: `https://app-venta.vercel.app/`.
 El usuario confirmo que no comprara dominio; esta URL de Vercel sera la oficial del evento. Verificado desde navegador: abre correctamente y muestra el selector de sede (UNIDEP Tampico / Parque Mendez), por lo que el deploy ya no esta en blanco.
 
 Siguiente paso: prueba operativa final en celular real con flujo completo de venta, inflable, caja y resumen.
+
+---
+
+## Actualizacion 2026-07-20 - pulido visual premium final
+
+Pedido del usuario: entregar visualmente como app premium que hasta su mama entienda.
+
+Cambios aplicados:
+- `PRODUCT.md`: contexto de producto y principios de diseno.
+- `src/app/globals.css`: tokens visuales, fondo claro, paneles, botones, focus states, reduced motion.
+- `src/components/BottomNav.tsx`: navegacion inferior con iconos `lucide-react`.
+- `src/components/SedeGate.tsx`: header de sede mas claro y badge universal "Sede activa".
+- `src/app/page.tsx`: selector de sede redisenado con botones grandes.
+- `Vender`, `TicketBar` y `PantallaCobro`: jerarquia de venta/cobro mas clara, total y feria protagonistas.
+- `Inflable`: formulario/tarjetas/timer con mejor contraste, alarma destacada y estados claros.
+- `Resumen`: tarjetas y listas mas legibles para venta, ganancia, ranking, inventario y barras por hora.
+- `Caja`: teorico, movimientos y corte con paneles consistentes.
+- `Ajustes`: productos, precios e inventario con controles mas grandes y menos apariencia tecnica.
+
+Verificacion:
+- `npm run lint` PASS.
+- `npm run build` PASS.
+- Playwright local en viewport movil 390x844: pantalla inicial, Vender e Inflable revisadas visualmente; sin traslapes relevantes. El circulo negro visto en capturas es overlay de Next dev, no produccion.
+
+Nota: se agrego dependencia `lucide-react` para iconos.

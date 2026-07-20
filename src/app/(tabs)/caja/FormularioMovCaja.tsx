@@ -45,33 +45,33 @@ export default function FormularioMovCaja({
   }
 
   return (
-    <section className="rounded-2xl border p-4 flex flex-col gap-3">
-      <h2 className="font-semibold">{tipo === "fondo" ? "Registrar fondo" : "Retiro"}</h2>
+    <section className="section-panel flex flex-col gap-3 p-4">
+      <h2 className="text-lg font-black">{tipo === "fondo" ? "Registrar fondo" : "Retiro"}</h2>
       <input
         inputMode="decimal"
         value={monto}
         onChange={(e) => setMonto(e.target.value)}
         placeholder="$0"
-        className="min-h-14 rounded-xl border px-4 text-2xl tabular-nums text-center"
+        className="min-h-16 rounded-2xl border px-4 text-center text-2xl tabular-nums"
       />
       <input
         value={nota}
         onChange={(e) => setNota(e.target.value)}
         placeholder="Nota (opcional)"
-        className="min-h-14 rounded-xl border px-4 text-lg"
+        className="min-h-14 rounded-2xl border px-4 text-lg font-semibold"
       />
       {error && <p className="text-red-700 font-semibold">{error}</p>}
       <div className="flex gap-2">
         <button
           onClick={onCancelar}
-          className="flex-1 min-h-14 rounded-2xl border border-zinc-300 font-semibold"
+          className="secondary-action min-h-14 flex-1 rounded-2xl font-black"
         >
           Cancelar
         </button>
         <button
           onClick={guardar}
           disabled={guardando}
-          className="flex-1 min-h-14 rounded-2xl bg-blue-600 text-white font-bold disabled:opacity-50"
+          className="primary-action min-h-14 flex-1 rounded-2xl font-black disabled:opacity-50"
         >
           {guardando ? "Guardando…" : "Guardar"}
         </button>

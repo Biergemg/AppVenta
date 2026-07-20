@@ -15,8 +15,8 @@ export default function PreciosInflable({
   onCambio: () => void;
 }) {
   return (
-    <section className="rounded-2xl border p-4 flex flex-col gap-3">
-      <h2 className="font-semibold">Precios del inflable</h2>
+    <section className="section-panel flex flex-col gap-3 p-4">
+      <h2 className="text-lg font-black">Precios del inflable</h2>
       {precios.map((p) => (
         <FilaPrecio key={p.id} precio={p} onCambio={onCambio} />
       ))}
@@ -52,7 +52,7 @@ function FilaPrecio({
     setGuardando(true);
     try {
       await actualizarPrecioInflable(precio.id, num);
-      setMensaje({ tipo: "ok", texto: "✓ Guardado" });
+      setMensaje({ tipo: "ok", texto: "Guardado" });
       onCambio();
     } catch {
       setMensaje({ tipo: "error", texto: "Sin internet. Reintenta." });
@@ -71,27 +71,27 @@ function FilaPrecio({
   }
 
   return (
-    <div className={`rounded-xl border p-3 ${precio.activo ? "" : "opacity-50"}`}>
-      <p className="font-semibold mb-2">{precio.minutos} min</p>
+    <div className={`soft-panel p-3 ${precio.activo ? "" : "opacity-60"}`}>
+      <p className="mb-2 font-black">{precio.minutos} min</p>
       <div className="flex gap-2">
         <input
           inputMode="decimal"
           value={valor}
           onChange={(e) => setValor(e.target.value)}
           placeholder="Sin definir"
-          className="flex-1 min-h-14 rounded-lg border px-3 tabular-nums"
+          className="min-h-14 flex-1 rounded-2xl border px-3 tabular-nums"
         />
         <button
           onClick={guardar}
           disabled={guardando}
-          className="min-h-14 px-4 rounded-lg bg-blue-600 text-white font-semibold disabled:opacity-50"
+          className="primary-action min-h-14 rounded-2xl px-4 font-black disabled:opacity-50"
         >
           Guardar
         </button>
       </div>
       {mensaje && (
         <p
-          className={`text-sm font-semibold mt-1 ${
+          className={`mt-1 text-sm font-bold ${
             mensaje.tipo === "ok" ? "text-green-700" : "text-red-700"
           }`}
         >
@@ -100,7 +100,7 @@ function FilaPrecio({
       )}
       <button
         onClick={toggleActivo}
-        className="mt-2 w-full min-h-14 rounded-lg border border-zinc-300 text-sm font-semibold"
+        className="mt-2 min-h-14 w-full rounded-2xl border border-zinc-300 bg-white text-sm font-black"
       >
         {precio.activo ? "Desactivar" : "Activar"}
       </button>

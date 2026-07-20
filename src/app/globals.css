@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.18 0.025 245);
+  --surface: oklch(0.975 0.006 130);
+  --surface-strong: oklch(0.945 0.012 130);
+  --line: oklch(0.88 0.012 130);
+  --muted: oklch(0.43 0.025 245);
+  --primary: oklch(0.48 0.15 133);
+  --primary-strong: oklch(0.40 0.13 133);
+  --blue: oklch(0.47 0.15 255);
+  --blue-soft: oklch(0.94 0.035 255);
+  --warning: oklch(0.76 0.16 85);
+  --warning-soft: oklch(0.96 0.055 85);
+  --danger: oklch(0.55 0.19 28);
+  --danger-soft: oklch(0.96 0.045 28);
+  --success-soft: oklch(0.94 0.06 140);
+  --shadow-soft: 0 10px 30px oklch(0.18 0.025 245 / 0.08);
+  --shadow-lift: 0 16px 40px oklch(0.18 0.025 245 / 0.12);
 }
 
 @theme inline {
@@ -12,15 +27,109 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+button:active,
+a:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid oklch(0.72 0.16 85);
+  outline-offset: 3px;
+}
+
+input {
+  background: white;
+  border-color: var(--line);
+  color: var(--foreground);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.8);
+}
+
+input::placeholder {
+  color: oklch(0.48 0.025 245);
+  opacity: 1;
+}
+
+.app-page {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.section-panel {
+  border: 1px solid var(--line);
+  background: white;
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+}
+
+.soft-panel {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 16px;
+}
+
+.primary-action {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 10px 22px oklch(0.48 0.15 133 / 0.25);
+}
+
+.primary-action:active {
+  background: var(--primary-strong);
+}
+
+.secondary-action {
+  background: white;
+  color: var(--blue);
+  border: 1px solid oklch(0.70 0.10 255);
+}
+
+.page-title {
+  font-size: 1.5rem;
+  line-height: 1.15;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.mini-label {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
 }

@@ -58,41 +58,41 @@ export default function FormularioProducto({
   }
 
   return (
-    <section className="rounded-2xl border p-4 flex flex-col gap-3">
-      <h2 className="font-semibold">Nuevo producto</h2>
+    <section className="section-panel flex flex-col gap-3 p-4">
+      <h2 className="text-lg font-black">Nuevo producto</h2>
 
       <input
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
         placeholder="Nombre (ej. Coca-Cola 600ml)"
-        className="min-h-14 rounded-xl border px-4 text-lg"
+        className="min-h-14 rounded-2xl border px-4 text-lg font-semibold"
       />
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-sm text-zinc-600">Costo de compra</span>
+          <span className="mini-label">Costo de compra</span>
           <input
             inputMode="decimal"
             value={costo}
             onChange={(e) => setCosto(e.target.value)}
             placeholder="$0"
-            className="min-h-14 rounded-xl border px-4 text-lg tabular-nums"
+            className="min-h-14 rounded-2xl border px-4 text-lg tabular-nums"
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-sm text-zinc-600">Precio de venta</span>
+          <span className="mini-label">Precio de venta</span>
           <input
             inputMode="decimal"
             value={precio}
             onChange={(e) => setPrecio(e.target.value)}
             placeholder="$0"
-            className="min-h-14 rounded-xl border px-4 text-lg tabular-nums"
+            className="min-h-14 rounded-2xl border px-4 text-lg tabular-nums"
           />
         </label>
       </div>
 
-      <div className="rounded-xl bg-zinc-50 p-3 text-center">
-        <p className="text-sm text-zinc-600">Ganancia por pieza</p>
+      <div className="soft-panel p-3 text-center">
+        <p className="mini-label">Ganancia por pieza</p>
         <p
           className={`text-2xl font-bold tabular-nums ${
             ganancia > 0
@@ -108,23 +108,23 @@ export default function FormularioProducto({
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1">
-          <span className="text-sm text-zinc-600">Stock inicial {SEDES[0].nombre}</span>
+          <span className="mini-label">Stock inicial {SEDES[0].nombre}</span>
           <input
             inputMode="numeric"
             value={stockA}
             onChange={(e) => setStockA(e.target.value)}
             placeholder="0"
-            className="min-h-14 rounded-xl border px-4 text-lg tabular-nums"
+            className="min-h-14 rounded-2xl border px-4 text-lg tabular-nums"
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-sm text-zinc-600">Stock inicial {SEDES[1].nombre}</span>
+          <span className="mini-label">Stock inicial {SEDES[1].nombre}</span>
           <input
             inputMode="numeric"
             value={stockB}
             onChange={(e) => setStockB(e.target.value)}
             placeholder="0"
-            className="min-h-14 rounded-xl border px-4 text-lg tabular-nums"
+            className="min-h-14 rounded-2xl border px-4 text-lg tabular-nums"
           />
         </label>
       </div>
@@ -144,7 +144,7 @@ export default function FormularioProducto({
       <button
         onClick={guardar}
         disabled={guardando}
-        className="min-h-14 rounded-2xl bg-blue-600 text-white text-lg font-bold disabled:opacity-50"
+        className="primary-action min-h-16 rounded-3xl text-lg font-black disabled:opacity-50"
       >
         {guardando ? "Guardando…" : "Guardar producto"}
       </button>

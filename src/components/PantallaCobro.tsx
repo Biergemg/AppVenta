@@ -56,25 +56,27 @@ export default function PantallaCobro({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col p-4 gap-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex flex-col gap-4 overflow-y-auto bg-[var(--surface)] p-4">
       <button
         onClick={onCancelar}
         disabled={confirmando}
-        className="self-start text-zinc-600 font-semibold disabled:opacity-50"
+        className="min-h-14 self-start rounded-2xl px-3 text-[var(--muted)] font-bold disabled:opacity-50"
       >
         ← Cancelar
       </button>
 
-      <div className="text-center">
-        <p className="text-zinc-500">Total</p>
-        <p className="text-4xl font-bold tabular-nums">${totalRedondeado.toFixed(2)}</p>
+      <div className="section-panel p-5 text-center">
+        <p className="mini-label">Total a cobrar</p>
+        <p className="text-5xl font-black tabular-nums text-[var(--foreground)]">
+          ${totalRedondeado.toFixed(2)}
+        </p>
       </div>
 
       <div className="grid grid-cols-3 gap-2">
         <button
           onClick={() => cambiarPago(totalRedondeado.toFixed(2))}
           disabled={confirmando}
-          className="min-h-14 rounded-xl bg-zinc-100 font-semibold text-lg disabled:opacity-50"
+          className="min-h-16 rounded-2xl bg-white font-black text-lg shadow-sm disabled:opacity-50"
         >
           Exacto
         </button>
@@ -83,7 +85,7 @@ export default function PantallaCobro({
             key={m}
             onClick={() => cambiarPago(String(m))}
             disabled={confirmando}
-            className="min-h-14 rounded-xl bg-zinc-100 font-semibold text-lg tabular-nums disabled:opacity-50"
+            className="min-h-16 rounded-2xl bg-white font-black text-lg tabular-nums shadow-sm disabled:opacity-50"
           >
             ${m}
           </button>
@@ -91,19 +93,19 @@ export default function PantallaCobro({
       </div>
 
       <label className="flex flex-col gap-1">
-        <span className="text-sm text-zinc-600">O pon la cantidad exacta con la que paga</span>
+        <span className="mini-label">O pon la cantidad exacta con la que paga</span>
         <input
           inputMode="decimal"
           value={pagoTexto}
           onChange={(e) => cambiarPago(e.target.value)}
           placeholder="$0"
           disabled={confirmando}
-          className="min-h-14 rounded-xl border px-4 text-2xl tabular-nums text-center"
+          className="min-h-16 rounded-2xl border px-4 text-2xl tabular-nums text-center"
         />
       </label>
 
-      <div className="rounded-2xl bg-green-50 p-4 text-center">
-        <p className="text-zinc-600">Feria</p>
+      <div className="section-panel bg-[var(--success-soft)] p-5 text-center">
+        <p className="mini-label">Feria</p>
         <p
           className={`text-5xl font-extrabold tabular-nums ${
             feria >= 0 ? "text-green-700" : "text-red-700"
@@ -118,7 +120,7 @@ export default function PantallaCobro({
       <button
         onClick={confirmar}
         disabled={!puedeConfirmar || confirmando}
-        className="min-h-16 rounded-2xl bg-green-600 text-white text-xl font-bold disabled:opacity-50"
+        className="primary-action min-h-16 rounded-3xl text-xl font-black disabled:opacity-50"
       >
         {confirmando ? "Guardando…" : "Confirmar cobro"}
       </button>

@@ -16,7 +16,7 @@ export default function ResumenPage() {
         setDatos(d);
         setError("");
       })
-      .catch(() => setError("Sin internet. Reintentando…"));
+      .catch(() => setError("Sin internet. Reintentando..."));
   }, []);
 
   useEffect(() => {
@@ -27,8 +27,10 @@ export default function ResumenPage() {
 
   if (!datos) {
     return (
-      <main className="p-4">
-        <p className="text-zinc-500">{error || "Cargando resumen…"}</p>
+      <main className="app-page p-4">
+        <p className="section-panel p-4 font-bold text-[var(--muted)]">
+          {error || "Cargando resumen..."}
+        </p>
       </main>
     );
   }
@@ -36,24 +38,34 @@ export default function ResumenPage() {
   const maxHora = Math.max(1, ...datos.ventasPorHora.map((h) => h.total));
 
   return (
-    <main className="flex flex-col gap-6 p-4 pb-8">
-      <h1 className="text-xl font-bold">Resumen</h1>
-      {error && <p className="text-red-700 text-sm">{error}</p>}
+    <main className="app-page flex flex-col gap-5 p-4 pb-8">
+      <div className="pt-1">
+        <h1 className="page-title">Resumen</h1>
+        <p className="mt-1 text-sm font-medium text-[var(--muted)]">
+          Ventas, ganancia, stock e inflable.
+        </p>
+      </div>
 
-      <section className="rounded-2xl border p-4 grid grid-cols-2 gap-4 text-center">
+      {error && (
+        <p className="rounded-2xl bg-[var(--danger-soft)] p-3 text-sm font-bold text-red-800">
+          {error}
+        </p>
+      )}
+
+      <section className="section-panel grid grid-cols-2 gap-4 p-5 text-center">
         <div>
-          <p className="text-sm text-zinc-500">Venta total</p>
-          <p className="text-3xl font-extrabold tabular-nums text-green-700">
+          <p className="mini-label">Venta total</p>
+          <p className="text-4xl font-black tabular-nums text-[var(--primary-strong)]">
             ${datos.ventaTotal.toFixed(2)}
           </p>
         </div>
         <div>
-          <p className="text-sm text-zinc-500">Ganancia</p>
-          <p className="text-3xl font-extrabold tabular-nums text-blue-700">
+          <p className="mini-label">Ganancia</p>
+          <p className="text-4xl font-black tabular-nums text-[var(--blue)]">
             ${datos.gananciaTotal.toFixed(2)}
           </p>
         </div>
-        <div className="col-span-2 grid grid-cols-2 gap-2 text-sm text-zinc-600 tabular-nums">
+        <div className="col-span-2 grid grid-cols-2 gap-2 text-sm font-semibold text-[var(--muted)] tabular-nums">
           <p>
             {SEDES[0].nombre}: ${datos.porSede[1].venta.toFixed(2)}
           </p>
@@ -65,38 +77,41 @@ export default function ResumenPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border p-4">
-        <h2 className="font-semibold mb-2">Ranking de productos</h2>
+      <section className="section-panel p-4">
+        <h2 className="mb-3 text-lg font-black">Ranking de productos</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-xs text-zinc-500 mb-1">Todo el evento</p>
+            <p className="mini-label mb-1 text-xs">Todo el evento</p>
             <RankingLista items={datos.rankingTodo} />
           </div>
           <div>
-            <p className="text-xs text-zinc-500 mb-1">Última hora</p>
+            <p className="mini-label mb-1 text-xs">Ultima hora</p>
             <RankingLista items={datos.rankingUltimaHora} />
           </div>
         </div>
       </section>
 
-      <section className="rounded-2xl border p-4">
-        <h2 className="font-semibold mb-2">Inventario teórico</h2>
-        <div className="flex flex-col gap-1">
+      <section className="section-panel p-4">
+        <h2 className="mb-3 text-lg font-black">Inventario teorico</h2>
+        <div className="flex flex-col gap-2">
           {datos.inventario.length === 0 && (
-            <p className="text-zinc-500 text-sm">Sin productos todavía.</p>
+            <p className="text-sm font-bold text-[var(--muted)]">Sin productos todavia.</p>
           )}
           {datos.inventario.map((f) => {
             const pct = f.inicial > 0 ? f.stock / f.inicial : null;
             const color =
               f.stock <= 0
-                ? "text-red-700 font-bold"
+                ? "text-red-700 font-black"
                 : pct !== null && pct < 0.15
-                  ? "text-yellow-700 font-bold"
-                  : "text-zinc-800";
+                  ? "text-yellow-800 font-black"
+                  : "text-zinc-800 font-bold";
             return (
-              <div key={`${f.producto_id}-${f.sede}`} className="flex justify-between text-sm">
-                <span>
-                  {f.nombre} — {nombreSede(f.sede)}
+              <div
+                key={`${f.producto_id}-${f.sede}`}
+                className="soft-panel flex justify-between gap-3 px-3 py-2 text-sm"
+              >
+                <span className="min-w-0 truncate">
+                  {f.nombre} - {nombreSede(f.sede)}
                 </span>
                 <span className={`tabular-nums ${color}`}>{f.stock}</span>
               </div>
@@ -105,38 +120,36 @@ export default function ResumenPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border p-4">
-        <h2 className="font-semibold mb-2">Ventas por hora</h2>
+      <section className="section-panel p-4">
+        <h2 className="mb-3 text-lg font-black">Ventas por hora</h2>
         {datos.ventasPorHora.length === 0 ? (
-          <p className="text-zinc-500 text-sm">Todavía no hay ventas.</p>
+          <p className="text-sm font-bold text-[var(--muted)]">Todavia no hay ventas.</p>
         ) : (
-          <div className="flex items-end gap-2 h-24">
+          <div className="flex h-24 items-end gap-2">
             {datos.ventasPorHora.map((h) => (
-              <div key={h.hora} className="flex-1 flex flex-col items-center justify-end gap-1">
+              <div key={h.hora} className="flex flex-1 flex-col items-center justify-end gap-1">
                 <div
-                  className="w-full bg-blue-500 rounded-t"
+                  className="w-full rounded-t bg-[var(--blue)]"
                   style={{ height: `${Math.max(4, (h.total / maxHora) * 80)}px` }}
                 />
-                <span className="text-[10px] text-zinc-500 tabular-nums">
-                  {h.hora.slice(11, 13)}h
-                </span>
+                <span className="text-[10px] text-zinc-500 tabular-nums">{h.hora}h</span>
               </div>
             ))}
           </div>
         )}
       </section>
 
-      <section className="rounded-2xl border p-4">
-        <h2 className="font-semibold mb-2">Inflable</h2>
+      <section className="section-panel p-4">
+        <h2 className="mb-3 text-lg font-black">Inflable</h2>
         <p className="tabular-nums">
           Niños atendidos: <strong>{datos.inflable.ninosAtendidos}</strong>
         </p>
         <p className="tabular-nums">
           Ingreso total: <strong>${datos.inflable.ingresoTotal.toFixed(2)}</strong>
         </p>
-        <p className="text-sm text-zinc-600 tabular-nums">
-          {SEDES[0].nombre}: ${datos.inflable.porSede[1].toFixed(2)} · {SEDES[1].nombre}: $
-          {datos.inflable.porSede[2].toFixed(2)}
+        <p className="text-sm font-semibold text-[var(--muted)] tabular-nums">
+          {SEDES[0].nombre}: ${datos.inflable.porSede[1].toFixed(2)} ·{" "}
+          {SEDES[1].nombre}: ${datos.inflable.porSede[2].toFixed(2)}
         </p>
       </section>
     </main>
@@ -145,16 +158,16 @@ export default function ResumenPage() {
 
 function RankingLista({ items }: { items: { nombre: string; cantidad: number }[] }) {
   if (items.length === 0) {
-    return <p className="text-zinc-400 text-sm">Sin ventas</p>;
+    return <p className="text-sm font-bold text-[var(--muted)]">Sin ventas</p>;
   }
   return (
-    <ol className="flex flex-col gap-1 text-sm">
+    <ol className="flex flex-col gap-2 text-sm">
       {items.slice(0, 5).map((it, i) => (
-        <li key={it.nombre + i} className="flex justify-between gap-2">
+        <li key={it.nombre + i} className="soft-panel flex justify-between gap-2 px-3 py-2">
           <span className="truncate">
             {i + 1}. {it.nombre}
           </span>
-          <span className="tabular-nums font-semibold">{it.cantidad}</span>
+          <span className="tabular-nums font-black">{it.cantidad}</span>
         </li>
       ))}
     </ol>
