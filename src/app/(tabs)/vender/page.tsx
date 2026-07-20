@@ -15,17 +15,21 @@ export default function VenderPage() {
   const [ticket, setTicket] = useState<LineaTicket[]>([]);
   const [cobroAbierto, setCobroAbierto] = useState(false);
   const [toast, setToast] = useState("");
+  const [errorCarga, setErrorCarga] = useState("");
+  const [cargado, setCargado] = useState(false);
 
   const cargar = useCallback(() => {
     if (!sede) return;
     listarProductos()
-      .then((todos) =>
-        setProductos(todos.filter((p) => p.activo).sort((a, b) => a.id - b.id))
-      )
-      .catch(() => {});
+      .then((todos) => {
+        setProductos(todos.filter((p) => p.activo).sort((a, b) => a.id - b.id));
+        setErrorCarga("");
+        setCargado(true);
+      })
+      .catch(() => setErrorCarga("Sin internet. Reintenta."));
     calcularStockSede(sede)
       .then(setStock)
-      .catch(() => {});
+      .catch(() => setErrorCarga("Sin internet. Reintenta."));
   }, [sede]);
 
   useEffect(() => {
@@ -83,7 +87,12 @@ export default function VenderPage() {
   return (
     <div className="flex flex-col">
       <div className="grid grid-cols-2 gap-3 p-4">
-        {productos.length === 0 && (
+        {errorCarga && (
+          <p className="col-span-2 text-red-700 font-semibold text-center py-8">
+            {errorCarga}
+          </p>
+        )}
+        {!errorCarga && cargado && productos.length === 0 && (
           <p className="col-span-2 text-zinc-500 text-center py-8">
             Todavía no hay productos. Dalos de alta en Ajustes.
           </p>

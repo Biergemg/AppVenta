@@ -17,14 +17,18 @@ export default function CajaPage() {
     null
   );
   const [toast, setToast] = useState("");
+  const [errorCarga, setErrorCarga] = useState("");
 
   const otraSede: SedeId | null = sede ? (sede === 1 ? 2 : 1) : null;
 
   const cargar = useCallback(() => {
     if (!sede || !otraSede) return;
     calcularEfectivoTeorico(sede)
-      .then(setMiTeorico)
-      .catch(() => {});
+      .then((t) => {
+        setMiTeorico(t);
+        setErrorCarga("");
+      })
+      .catch(() => setErrorCarga("Sin internet. Reintenta."));
     calcularEfectivoTeorico(otraSede)
       .then(setOtroTeorico)
       .catch(() => {});
@@ -42,11 +46,28 @@ export default function CajaPage() {
     return () => clearTimeout(t);
   }, [toast]);
 
-  if (!sede || !otraSede || !miTeorico) return null;
+  if (!sede || !otraSede) return null;
+
+  if (!miTeorico) {
+    return (
+      <main className="flex flex-col gap-4 p-4">
+        <h1 className="text-xl font-bold">Caja</h1>
+        <p className={errorCarga ? "text-red-700 font-semibold" : "text-zinc-500"}>
+          {errorCarga || "Cargando…"}
+        </p>
+      </main>
+    );
+  }
 
   return (
     <main className="flex flex-col gap-6 p-4 pb-8">
       <h1 className="text-xl font-bold">Caja</h1>
+
+      {errorCarga && (
+        <p className="rounded-xl bg-red-100 text-red-800 p-3 text-sm font-semibold">
+          {errorCarga}
+        </p>
+      )}
 
       {toast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-xl bg-green-600 text-white px-4 py-2 font-semibold shadow-lg">

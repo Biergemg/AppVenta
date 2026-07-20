@@ -23,20 +23,20 @@ export default function TicketBar({
 
   return (
     <div className="sticky bottom-14 z-40 border-t bg-white p-3 flex flex-col gap-2 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
-      <div className="max-h-40 overflow-y-auto flex flex-col gap-2">
+      <div className="max-h-60 overflow-y-auto flex flex-col gap-2">
         {items.map((l) => (
           <div key={l.producto.id} className="flex items-center justify-between gap-2">
             <span className="flex-1 font-semibold truncate">{l.producto.nombre}</span>
             <button
               onClick={() => onCambiarCantidad(l.producto.id, -1)}
-              className="w-10 h-10 rounded-lg bg-zinc-100 text-xl font-bold"
+              className="w-14 h-14 shrink-0 rounded-lg bg-zinc-100 text-xl font-bold"
             >
               −
             </button>
             <span className="w-6 text-center tabular-nums font-semibold">{l.cantidad}</span>
             <button
               onClick={() => onCambiarCantidad(l.producto.id, 1)}
-              className="w-10 h-10 rounded-lg bg-zinc-100 text-xl font-bold"
+              className="w-14 h-14 shrink-0 rounded-lg bg-zinc-100 text-xl font-bold"
             >
               +
             </button>

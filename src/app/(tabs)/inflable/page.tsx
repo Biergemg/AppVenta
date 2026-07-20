@@ -25,14 +25,18 @@ export default function InflablePage() {
   const [ahora, setAhora] = useState(() => Date.now());
   const [extendiendo, setExtendiendo] = useState<Tiempo | null>(null);
   const [toast, setToast] = useState("");
+  const [errorCarga, setErrorCarga] = useState("");
 
   const cargar = useCallback(() => {
     listarPreciosInflable()
-      .then(setPrecios)
-      .catch(() => {});
+      .then((p) => {
+        setPrecios(p);
+        setErrorCarga("");
+      })
+      .catch(() => setErrorCarga("Sin internet. Reintenta."));
     listarTiemposActivos()
       .then(setTiempos)
-      .catch(() => {});
+      .catch(() => setErrorCarga("Sin internet. Reintenta."));
   }, []);
 
   useEffect(() => {
@@ -129,6 +133,12 @@ export default function InflablePage() {
   return (
     <main className="flex flex-col gap-6 p-4 pb-8">
       <h1 className="text-xl font-bold">Inflable</h1>
+
+      {errorCarga && (
+        <p className="rounded-xl bg-red-100 text-red-800 p-3 text-sm font-semibold">
+          {errorCarga}
+        </p>
+      )}
 
       {wakeLockEstado === "rechazado" || wakeLockEstado === "no-soportado" ? (
         <p className="rounded-xl bg-yellow-100 text-yellow-800 p-3 text-sm font-semibold">

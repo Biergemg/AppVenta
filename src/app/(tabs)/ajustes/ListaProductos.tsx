@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SEDES, type SedeId } from "@/lib/sede";
 import { actualizarProducto, entradaMercancia, type Producto } from "@/lib/productos";
 
@@ -41,6 +41,15 @@ function FilaProducto({
   const [precio, setPrecio] = useState(String(producto.precio_venta));
   const [guardando, setGuardando] = useState(false);
   const [mostrarEntrada, setMostrarEntrada] = useState(false);
+  const [mensaje, setMensaje] = useState<{ tipo: "ok" | "error"; texto: string } | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (!mensaje) return;
+    const t = setTimeout(() => setMensaje(null), 2500);
+    return () => clearTimeout(t);
+  }, [mensaje]);
 
   async function guardarPrecios() {
     setGuardando(true);
@@ -49,22 +58,32 @@ function FilaProducto({
         costo_compra: Number(costo) || 0,
         precio_venta: Number(precio) || 0,
       });
+      setMensaje({ tipo: "ok", texto: "✓ Guardado" });
       onCambio();
+    } catch {
+      setMensaje({ tipo: "error", texto: "Sin internet. Reintenta." });
     } finally {
       setGuardando(false);
     }
   }
 
   async function toggleActivo() {
-    await actualizarProducto(producto.id, { activo: !producto.activo });
-    onCambio();
+    try {
+      await actualizarProducto(producto.id, { activo: !producto.activo });
+      onCambio();
+    } catch {
+      setMensaje({ tipo: "error", texto: "Sin internet. Reintenta." });
+    }
   }
 
   return (
     <div className={`rounded-xl border p-3 ${producto.activo ? "" : "opacity-50"}`}>
       <div className="flex items-center justify-between gap-2">
         <p className="font-semibold text-lg">{producto.nombre}</p>
-        <button onClick={toggleActivo} className="text-sm underline text-zinc-600">
+        <button
+          onClick={toggleActivo}
+          className="min-h-14 px-3 rounded-lg text-sm font-semibold text-zinc-600"
+        >
           {producto.activo ? "Desactivar" : "Activar"}
         </button>
       </div>
@@ -90,17 +109,27 @@ function FilaProducto({
         </label>
       </div>
 
+      {mensaje && (
+        <p
+          className={`text-sm font-semibold mt-1 ${
+            mensaje.tipo === "ok" ? "text-green-700" : "text-red-700"
+          }`}
+        >
+          {mensaje.texto}
+        </p>
+      )}
+
       <div className="flex gap-2 mt-2">
         <button
           onClick={guardarPrecios}
           disabled={guardando}
-          className="flex-1 min-h-12 rounded-xl border border-blue-600 text-blue-600 font-semibold disabled:opacity-50"
+          className="flex-1 min-h-14 rounded-xl border border-blue-600 text-blue-600 font-semibold disabled:opacity-50"
         >
           {guardando ? "Guardando…" : "Guardar cambios"}
         </button>
         <button
           onClick={() => setMostrarEntrada((v) => !v)}
-          className="flex-1 min-h-12 rounded-xl border border-zinc-300 font-semibold"
+          className="flex-1 min-h-14 rounded-xl border border-zinc-300 font-semibold"
         >
           Entrada de mercancía
         </button>
@@ -157,7 +186,7 @@ function FormularioEntrada({
           <button
             key={s.id}
             onClick={() => setSede(s.id)}
-            className={`flex-1 min-h-12 rounded-lg text-sm font-semibold border ${
+            className={`flex-1 min-h-14 rounded-lg text-sm font-semibold border ${
               sede === s.id ? "bg-blue-600 text-white border-blue-600" : "border-zinc-300"
             }`}
           >
@@ -176,7 +205,7 @@ function FormularioEntrada({
       <button
         onClick={guardar}
         disabled={guardando}
-        className="min-h-12 rounded-xl bg-green-600 text-white font-semibold disabled:opacity-50"
+        className="min-h-14 rounded-xl bg-green-600 text-white font-semibold disabled:opacity-50"
       >
         {guardando ? "Guardando…" : "Registrar entrada"}
       </button>

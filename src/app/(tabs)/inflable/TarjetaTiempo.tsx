@@ -70,13 +70,13 @@ export default function TarjetaTiempo({
         <div className="flex gap-2 mt-1">
           <button
             onClick={onExtender}
-            className="flex-1 min-h-12 rounded-xl border border-blue-600 text-blue-600 font-semibold"
+            className="flex-1 min-h-14 rounded-xl border border-blue-600 text-blue-600 font-semibold"
           >
             +30 min
           </button>
           <button
             onClick={onTerminar}
-            className="flex-1 min-h-12 rounded-xl bg-zinc-700 text-white font-semibold"
+            className="flex-1 min-h-14 rounded-xl bg-zinc-700 text-white font-semibold"
           >
             Ya salió
           </button>
