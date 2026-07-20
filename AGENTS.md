@@ -81,10 +81,10 @@ Si algo bloquea una fase (ej. falta de llaves de Supabase, decisión de negocio 
 
 | Field | Value |
 |-------|-------|
-| Current phase | F7 (Pulido UX, estados vacíos, manejo de errores de red, deploy a Vercel) — no iniciada |
-| Last completed phase | F6 (Caja: fondo, retiros, corte con diferencia) |
+| Current phase | F7 (Pulido UX + correcciones pre-producción + Vercel) — en verificación post-push |
+| Last completed phase | F6 (Caja: fondo, retiros, corte con diferencia) + correcciones críticas F7 |
 | Last completed on | 2026-07-20 |
-| Next action | Revisar cada pantalla contra la sección 3 de CLAUDE.md (UX), estados vacíos, manejo de errores de red; el deploy a Vercel NO se activa hasta que el usuario diga que todo está listo (decisión ya registrada) |
-| Blocking items | Ninguno — Supabase real conectado y verificado (lectura + escritura) el 2026-07-20 |
+| Next action | Verificar redeploy de Vercel con variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`; si sigue en blanco, revisar logs de Vercel/runtime del navegador |
+| Blocking items | Ninguno en código local: `npm run lint` y `npm run build` pasan. Configuración obligatoria en Vercel: variables públicas de Supabase |
 | **Fecha límite real** | **Evento (Festival Nacional Minibasket 2026 MX) empieza 2026-07-22 en Tampico, Tamaulipas — quedan 2 días para F5–F7** |
 | Sedes reales | Sede A = UNIDEP Tampico, Sede B = Parque Méndez (confirmado 2026-07-19, ver CLAUDE.md sección 1 y Notes and Decisions) |

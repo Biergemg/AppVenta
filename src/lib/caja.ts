@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import type { SedeId } from "@/lib/sede";
+import { redondearDinero } from "@/lib/dinero";
 
 export type EfectivoTeorico = {
   fondos: number;
@@ -19,7 +20,7 @@ export async function registrarMovCaja(input: {
   const { error } = await supabase.from("caja_mov").insert({
     sede: input.sede,
     tipo: input.tipo,
-    monto: input.monto,
+    monto: redondearDinero(input.monto),
     nota: input.nota ?? null,
   });
   if (error) throw error;
@@ -41,17 +42,17 @@ export async function calcularEfectivoTeorico(sede: SedeId): Promise<EfectivoTeo
   let fondos = 0;
   let retiros = 0;
   for (const m of movs ?? []) {
-    if (m.tipo === "fondo") fondos += m.monto;
-    else retiros += m.monto;
+    if (m.tipo === "fondo") fondos = redondearDinero(fondos + m.monto);
+    else retiros = redondearDinero(retiros + m.monto);
   }
 
   let ventasBebida = 0;
   let ventasInflable = 0;
   for (const v of ventas ?? []) {
-    if (v.tipo === "bebida") ventasBebida += v.total;
-    else ventasInflable += v.total;
+    if (v.tipo === "bebida") ventasBebida = redondearDinero(ventasBebida + v.total);
+    else ventasInflable = redondearDinero(ventasInflable + v.total);
   }
-  const ventasEfectivo = ventasBebida + ventasInflable;
+  const ventasEfectivo = redondearDinero(ventasBebida + ventasInflable);
 
   return {
     fondos,
@@ -59,6 +60,6 @@ export async function calcularEfectivoTeorico(sede: SedeId): Promise<EfectivoTeo
     ventasBebida,
     ventasInflable,
     retiros,
-    total: fondos + ventasEfectivo - retiros,
+    total: redondearDinero(fondos + ventasEfectivo - retiros),
   };
 }

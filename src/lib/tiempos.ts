@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import type { SedeId } from "@/lib/sede";
+import { redondearDinero } from "@/lib/dinero";
 
 export type Tiempo = {
   id: number;
@@ -46,20 +47,25 @@ export async function registrarNino(input: {
     .single();
   if (error) throw error;
 
+  const precio = redondearDinero(input.precio);
+  const pagoCon = redondearDinero(input.pagoCon);
   const { error: errorVenta } = await supabase.from("ventas").insert({
     sede: input.sede,
     tipo: "inflable",
     producto_id: null,
     cantidad: 1,
-    precio_unit: input.precio,
+    precio_unit: precio,
     costo_unit: 0,
-    total: input.precio,
-    pago_con: input.pagoCon,
-    cambio: input.pagoCon - input.precio,
+    total: precio,
+    pago_con: pagoCon,
+    cambio: redondearDinero(pagoCon - precio),
     metodo: "efectivo",
     tiempo_id: tiempo.id,
   });
-  if (errorVenta) throw errorVenta;
+  if (errorVenta) {
+    await supabase.from("tiempos").delete().eq("id", tiempo.id);
+    throw errorVenta;
+  }
 
   return tiempo as Tiempo;
 }
@@ -77,16 +83,18 @@ export async function extenderTiempo(input: {
     .eq("id", input.tiempo.id);
   if (errorUpdate) throw errorUpdate;
 
+  const precio = redondearDinero(input.precio);
+  const pagoCon = redondearDinero(input.pagoCon);
   const { error: errorVenta } = await supabase.from("ventas").insert({
     sede: input.tiempo.sede,
     tipo: "inflable",
     producto_id: null,
     cantidad: 1,
-    precio_unit: input.precio,
+    precio_unit: precio,
     costo_unit: 0,
-    total: input.precio,
-    pago_con: input.pagoCon,
-    cambio: input.pagoCon - input.precio,
+    total: precio,
+    pago_con: pagoCon,
+    cambio: redondearDinero(pagoCon - precio),
     metodo: "efectivo",
     tiempo_id: input.tiempo.id,
   });

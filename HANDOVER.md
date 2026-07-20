@@ -117,3 +117,30 @@ State), `src/lib/sede.ts` (SEDES).
 | Gate 1 last result | PASS (se leyeron los archivos reales antes de escribir código; no se inventaron nombres de campos) |
 | Gate 2 last result | PASS (lint 0, build exitoso, rutas verificadas con curl) |
 | Gate 3 last result | no alcanzado (no hay PR/merge en este proyecto local todavía) |
+
+---
+
+## Actualizacion 2026-07-20 - correcciones pre-produccion / Vercel
+
+Usuario reporto que el sitio ya esta deployado en Vercel pero "no se ve nada" y pidio corregir, commitear, pushear y decir que variables poner en Vercel.
+
+Cambios aplicados:
+- `src/lib/supabase.ts`: ya no truena al importar si faltan variables publicas; las pantallas pueden mostrar error en vez de quedar en blanco.
+- `src/lib/dinero.ts`: helper central para redondear dinero a 2 decimales.
+- `src/components/PantallaCobro.tsx`: bloquea Cancelar mientras guarda, usa total exacto con 2 decimales y rechaza mas de 2 decimales en pago.
+- `src/lib/ventas.ts`, `src/lib/tiempos.ts`, `src/lib/caja.ts`, `src/lib/resumen.ts`: totales, feria, caja y resumen redondeados a centavos.
+- `src/lib/tiempos.ts`: si se crea el timer pero falla el cobro del inflable, borra el timer para evitar huerfanos indistinguibles.
+- `src/lib/resumen.ts`: "Ventas por hora" usa hora local `America/Mexico_City`; inventario incluye productos desactivados para no ocultar stock historico.
+- `src/lib/alarma.ts` + `src/app/(tabs)/inflable/page.tsx`: boton "Activar alarma", manejo de `AudioContext.resume()` con `await`, y aviso si el navegador bloquea audio.
+- `src/app/(tabs)/caja/*`: retiro mayor al efectivo teorico queda bloqueado; efectivo negativo se muestra rojo.
+- `src/app/layout.tsx` + `public/robots.txt`: noindex/nofollow para reducir riesgo de indexacion accidental.
+
+Verificacion:
+- `npm run lint` PASS.
+- `npm run build` PASS.
+
+Vercel:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+Despues de guardar esas variables, hacer redeploy. Si sigue en blanco, revisar logs de Vercel y consola del navegador.

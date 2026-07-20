@@ -1,7 +1,6 @@
 let ctx: AudioContext | null = null;
 
-/** Tono generado con Web Audio (sin archivos externos). */
-export function reproducirBeep() {
+export async function prepararAlarma(): Promise<boolean> {
   try {
     if (!ctx) {
       const AudioCtx =
@@ -10,7 +9,18 @@ export function reproducirBeep() {
           .webkitAudioContext;
       ctx = new AudioCtx();
     }
-    if (ctx.state === "suspended") ctx.resume();
+    if (ctx.state === "suspended") await ctx.resume();
+    return ctx.state === "running";
+  } catch {
+    return false;
+  }
+}
+
+/** Tono generado con Web Audio (sin archivos externos). */
+export async function reproducirBeep(): Promise<boolean> {
+  try {
+    const listo = await prepararAlarma();
+    if (!listo || !ctx) return false;
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -22,8 +32,10 @@ export function reproducirBeep() {
     gain.connect(ctx.destination);
     osc.start();
     osc.stop(ctx.currentTime + 0.5);
+    return true;
   } catch {
     // Navegador sin soporte de Web Audio: no truena la app, solo no suena.
+    return false;
   }
 }
 

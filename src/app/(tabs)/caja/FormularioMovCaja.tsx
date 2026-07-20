@@ -9,11 +9,13 @@ export default function FormularioMovCaja({
   tipo,
   onCancelar,
   onGuardado,
+  maxRetiro,
 }: {
   sede: SedeId;
   tipo: "fondo" | "retiro";
   onCancelar: () => void;
   onGuardado: () => void;
+  maxRetiro?: number;
 }) {
   const [monto, setMonto] = useState("");
   const [nota, setNota] = useState("");
@@ -24,6 +26,10 @@ export default function FormularioMovCaja({
     const num = Number(monto);
     if (!num || num <= 0) {
       setError("Pon una cantidad mayor a 0.");
+      return;
+    }
+    if (tipo === "retiro" && maxRetiro != null && num > maxRetiro) {
+      setError("No puedes retirar mas de lo que debe haber en caja.");
       return;
     }
     setGuardando(true);

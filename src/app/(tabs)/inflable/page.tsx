@@ -10,7 +10,7 @@ import {
   terminarTiempo,
   type Tiempo,
 } from "@/lib/tiempos";
-import { reproducirBeep, vibrar } from "@/lib/alarma";
+import { prepararAlarma, reproducirBeep, vibrar } from "@/lib/alarma";
 import { useWakeLock } from "@/lib/useWakeLock";
 import FormularioNino from "./FormularioNino";
 import TarjetaTiempo from "./TarjetaTiempo";
@@ -26,6 +26,8 @@ export default function InflablePage() {
   const [extendiendo, setExtendiendo] = useState<Tiempo | null>(null);
   const [toast, setToast] = useState("");
   const [errorCarga, setErrorCarga] = useState("");
+  const [alarmaLista, setAlarmaLista] = useState(false);
+  const [alarmaBloqueada, setAlarmaBloqueada] = useState(false);
 
   const cargar = useCallback(() => {
     listarPreciosInflable()
@@ -76,10 +78,10 @@ export default function InflablePage() {
   useEffect(() => {
     if (hayVencidosMiSede) {
       if (!alarmaIntervalo.current) {
-        reproducirBeep();
+        reproducirBeep().then((ok) => setAlarmaBloqueada(!ok));
         vibrar();
         alarmaIntervalo.current = setInterval(() => {
-          reproducirBeep();
+          reproducirBeep().then((ok) => setAlarmaBloqueada(!ok));
           vibrar();
         }, 3000);
       }
@@ -94,6 +96,13 @@ export default function InflablePage() {
       }
     };
   }, [hayVencidosMiSede]);
+
+  async function activarAlarma() {
+    const ok = await prepararAlarma();
+    setAlarmaLista(ok);
+    setAlarmaBloqueada(!ok);
+    if (ok) setToast("Alarma lista");
+  }
 
   const precio30 = precios.find((p) => p.minutos === 30);
 
@@ -145,6 +154,21 @@ export default function InflablePage() {
           Mantén la pantalla prendida para que suene la alarma.
         </p>
       ) : null}
+
+      {!alarmaLista && (
+        <button
+          onClick={activarAlarma}
+          className="min-h-14 rounded-2xl bg-yellow-400 text-yellow-950 font-bold"
+        >
+          Activar alarma
+        </button>
+      )}
+
+      {alarmaBloqueada && (
+        <p className="rounded-xl bg-yellow-100 text-yellow-900 p-3 text-sm font-semibold">
+          Toca el boton Activar alarma para que el celular permita el sonido.
+        </p>
+      )}
 
       {toast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-xl bg-green-600 text-white px-4 py-2 font-semibold shadow-lg">

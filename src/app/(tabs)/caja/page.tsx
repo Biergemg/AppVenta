@@ -77,7 +77,11 @@ export default function CajaPage() {
 
       <section className="rounded-2xl border p-4 text-center">
         <p className="text-zinc-500">Debes tener en la caja</p>
-        <p className="text-4xl font-extrabold tabular-nums text-green-700">
+        <p
+          className={`text-4xl font-extrabold tabular-nums ${
+            miTeorico.total >= 0 ? "text-green-700" : "text-red-700"
+          }`}
+        >
           ${miTeorico.total.toFixed(2)}
         </p>
         <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-zinc-600 tabular-nums">
@@ -113,6 +117,7 @@ export default function CajaPage() {
         <FormularioMovCaja
           sede={sede}
           tipo={formularioAbierto}
+          maxRetiro={miTeorico.total}
           onCancelar={() => setFormularioAbierto(null)}
           onGuardado={() => {
             const tipo = formularioAbierto;

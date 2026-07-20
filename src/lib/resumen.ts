@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { SEDES, type SedeId } from "@/lib/sede";
+import { redondearDinero } from "@/lib/dinero";
 
 type ProductoRanking = { producto_id: number; nombre: string; cantidad: number };
 type FilaInventario = {
@@ -69,12 +70,17 @@ export async function calcularResumen(): Promise<ResumenData> {
   const haceUnaHora = Date.now() - 60 * 60 * 1000;
 
   for (const row of v) {
-    const ganancia = (row.precio_unit - row.costo_unit) * row.cantidad;
-    ventaTotal += row.total;
-    gananciaTotal += ganancia;
-    porSede[row.sede].venta += row.total;
-    porSede[row.sede].ganancia += ganancia;
-    porTipo[row.tipo as "bebida" | "inflable"] += row.total;
+    const totalFila = redondearDinero(row.total);
+    const ganancia = redondearDinero((row.precio_unit - row.costo_unit) * row.cantidad);
+    ventaTotal = redondearDinero(ventaTotal + totalFila);
+    gananciaTotal = redondearDinero(gananciaTotal + ganancia);
+    porSede[row.sede].venta = redondearDinero(porSede[row.sede].venta + totalFila);
+    porSede[row.sede].ganancia = redondearDinero(
+      porSede[row.sede].ganancia + ganancia
+    );
+    porTipo[row.tipo as "bebida" | "inflable"] = redondearDinero(
+      porTipo[row.tipo as "bebida" | "inflable"] + totalFila
+    );
 
     if (row.tipo === "bebida" && row.producto_id != null) {
       cantidadPorProducto.set(
@@ -90,11 +96,16 @@ export async function calcularResumen(): Promise<ResumenData> {
     }
 
     if (row.tipo === "inflable") {
-      ingresoInflablePorSede[row.sede] = (ingresoInflablePorSede[row.sede] ?? 0) + row.total;
+      ingresoInflablePorSede[row.sede] = redondearDinero(
+        (ingresoInflablePorSede[row.sede] ?? 0) + totalFila
+      );
     }
 
-    const clave = `${new Date(row.ts).toISOString().slice(0, 13)}:00`;
-    ventasPorHoraMap.set(clave, (ventasPorHoraMap.get(clave) ?? 0) + row.total);
+    const clave = formatearHoraLocal(row.ts);
+    ventasPorHoraMap.set(
+      clave,
+      redondearDinero((ventasPorHoraMap.get(clave) ?? 0) + totalFila)
+    );
   }
 
   const aRanking = (mapa: Map<number, number>): ProductoRanking[] =>
@@ -122,7 +133,7 @@ export async function calcularResumen(): Promise<ResumenData> {
   }
 
   const inventario: FilaInventario[] = [];
-  for (const p of prods.filter((p) => p.activo)) {
+  for (const p of prods) {
     for (const s of SEDES) {
       const key = `${p.id}-${s.id}`;
       inventario.push({
@@ -155,4 +166,12 @@ export async function calcularResumen(): Promise<ResumenData> {
       porSede: ingresoInflablePorSede as Record<SedeId, number>,
     },
   };
+}
+
+function formatearHoraLocal(ts: string): string {
+  return new Intl.DateTimeFormat("es-MX", {
+    timeZone: "America/Mexico_City",
+    hour: "2-digit",
+    hour12: false,
+  }).format(new Date(ts));
 }
