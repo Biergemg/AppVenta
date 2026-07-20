@@ -81,7 +81,29 @@ ai-eval-rubric.md.
 ## Preguntas abiertas / pendientes
 
 - [ ] Llaves reales de Supabase (URL + anon key) — bloqueante para F2 en adelante.
-- [ ] Nombre real de las 2 sedes si el usuario quiere cambiar "Frente A"/"Frente B" (configurable en Ajustes según sección 5.6, aún no implementado — hoy están hardcodeadas en `src/lib/sede.ts`).
+- [x] Nombre real de las 2 sedes — RESUELTO 2026-07-19: Sede A = "UNIDEP Tampico", Sede B = "Parque Méndez" (usuario compartió póster del evento + 2 links de Google Maps). Ya actualizado en `src/lib/sede.ts` y `CLAUDE.md`.
+
+## Actualización 2026-07-19 (misma sesión, después del handover inicial)
+
+Usuario compartió el póster del evento y 2 enlaces `share.google/...`. Los
+enlaces no resuelven a una ficha de lugar (Google los redirige a una
+búsqueda), pero el término de búsqueda en la URL de redirección reveló los
+nombres reales: `share.google/oWAHFcFMPlNHjam04` → "unidep tampico";
+`share.google/6wqnDVH8E86xSuiK8` → "parque mendez". Confianza: alta en el
+nombre del lugar, sin confirmar la dirección exacta (la app no la necesita,
+solo el nombre para el selector de sede).
+
+**Dato crítico de calendario:** el evento (Festival Nacional Minibasket 2026
+MX, Tampico Tamaulipas) es del 22 al 26 de julio de 2026. Hoy es 2026-07-19.
+Quedan **3 días** para completar F2–F7 antes de que arranque el evento.
+Priorizar: 1) llaves de Supabase, 2) F2 (alta de productos), 3) F3 (vender),
+el resto según tiempo disponible — F5 (inflable) y F6 (caja) son necesarias
+para operar el día 1, F7 (pulido/deploy) es la que más se puede recortar si
+el tiempo aprieta.
+
+Archivos actualizados en esta actualización: `CLAUDE.md` (sección 1,
+sección 5.1, sección 5.6, Notes and Decisions), `AGENTS.md` (Active Project
+State), `src/lib/sede.ts` (SEDES).
 
 ## Context at Handover
 

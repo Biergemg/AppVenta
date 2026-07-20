@@ -86,3 +86,5 @@ Si algo bloquea una fase (ej. falta de llaves de Supabase, decisión de negocio 
 | Last completed on | 2026-07-19 |
 | Next action | Cuando el usuario entregue las llaves de Supabase: pegarlas en `.env.local`, correr `supabase/schema.sql` en el proyecto real, y arrancar F2 (formulario de alta de producto con margen en vivo) |
 | Blocking items | Llaves reales de Supabase (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY) — el usuario tiene cuenta pero aún no crea el proyecto |
+| **Fecha límite real** | **Evento (Festival Nacional Minibasket 2026 MX) empieza 2026-07-22 en Tampico, Tamaulipas — hoy es 2026-07-19, quedan 3 días para F2–F7** |
+| Sedes reales | Sede A = UNIDEP Tampico, Sede B = Parque Méndez (confirmado 2026-07-19, ver CLAUDE.md sección 1 y Notes and Decisions) |

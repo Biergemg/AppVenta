@@ -1,8 +1,8 @@
 export type SedeId = 1 | 2;
 
 export const SEDES: { id: SedeId; nombre: string }[] = [
-  { id: 1, nombre: "Frente A" },
-  { id: 2, nombre: "Frente B" },
+  { id: 1, nombre: "UNIDEP Tampico" },
+  { id: 2, nombre: "Parque Méndez" },
 ];
 
 const STORAGE_KEY = "sede";

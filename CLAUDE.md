@@ -15,7 +15,13 @@ Eres el desarrollador de este proyecto. Construye TODO lo descrito aquí sin ped
 
 ## 1. Contexto
 
-Negocio familiar: venta de refrescos y aguas en un evento deportivo con **2 sedes** (Frente A y Frente B) operadas por 2 personas (una por sede, cada una con su celular). Cada sede tiene además **1 inflable** que se cobra por tiempo (30/60 min). No hay empleados ni rol de administrador separado: **los operadores son los dueños**, todo vive en una sola app.
+Negocio familiar: venta de refrescos y aguas en un evento deportivo con **2 sedes** operadas por 2 personas (una por sede, cada una con su celular). Cada sede tiene además **1 inflable** que se cobra por tiempo (30/60 min). No hay empleados ni rol de administrador separado: **los operadores son los dueños**, todo vive en una sola app.
+
+**Evento real:** Festival Nacional Minibasket 2026 MX — Tampico, Tamaulipas — **22 al 26 de julio de 2026**.
+
+**Sedes reales:**
+- **Sede A — UNIDEP Tampico**
+- **Sede B — Parque Méndez**
 
 ## 2. Stack obligatorio
 
@@ -62,7 +68,7 @@ tiempos(id, sede smallint, nino text, responsable text,
 ## 5. Módulos
 
 ### 5.1 Elegir sede (primera pantalla)
-Dos botones gigantes: Frente A / Frente B. Se guarda en localStorage con opción de cambiar desde Ajustes.
+Dos botones gigantes: UNIDEP Tampico / Parque Méndez. Se guarda en localStorage con opción de cambiar desde Ajustes.
 
 ### 5.2 Vender
 - Cuadrícula de botones fijos por producto (nombre, precio, stock restante de MI sede). **Nunca reordenar por popularidad.** Sin stock → botón gris "Agotado".
@@ -90,7 +96,7 @@ Dos botones gigantes: Frente A / Frente B. Se guarda en localStorage con opción
 - **Corte**: capturo lo contado físicamente → la app muestra diferencia contra el teórico en verde/rojo.
 
 ### 5.6 Ajustes — INVENTARIO RÁPIDO (prioridad alta del dueño)
-- **Alta de producto en una sola tarjeta**: nombre, **costo de compra**, **precio de venta** (la app muestra en vivo la ganancia por pieza y el % de margen al teclear), stock inicial Frente A y Frente B. Guardar = producto listo para vender. El flujo completo debe tomar <20 segundos por producto.
+- **Alta de producto en una sola tarjeta**: nombre, **costo de compra**, **precio de venta** (la app muestra en vivo la ganancia por pieza y el % de margen al teclear), stock inicial en UNIDEP Tampico y en Parque Méndez. Guardar = producto listo para vender. El flujo completo debe tomar <20 segundos por producto.
 - "Entrada de mercancía": producto + cantidad + sede (para resurtidos a media jornada).
 - Editar precio/costo (afecta solo ventas futuras), desactivar producto.
 - Precios del inflable (30 min, 60 min, extensión) y nombres de las sedes.
@@ -213,3 +219,4 @@ baseline_test_count: 0      (no hay tests todavía)
 [2026-07-19] Decision: `.env.local` se crea con valores placeholder hasta que el usuario cree su proyecto Supabase y entregue URL + anon key — Reason: dato bloqueante identificado explícitamente por este mismo documento (línea 3); el usuario confirmó que tiene cuenta pero no proyecto creado.
 [2026-07-19] Decision: RLS deshabilitado en las 5 tablas de `supabase/schema.sql` — Reason: sección 2 del spec establece que no hay login, la URL no pública es la única protección; con RLS activo sin políticas, la anon key no podría leer/escribir nada.
 [2026-07-19] Decision: se instaló git localmente (antes no existía) para poder usar el pre-commit hook y `.ai-context/session-context.md` de advanced-ai-dev-skill — Reason: el usuario pidió trazabilidad estricta vía esta skill; no se ha hecho push a ningún remoto (eso es F7/sección 8, pendiente).
+[2026-07-19] Decision: nombres reales de sede confirmados — Sede A = "UNIDEP Tampico", Sede B = "Parque Méndez"; evento = Festival Nacional Minibasket 2026 MX, Tampico Tamaulipas, 22–26 de julio de 2026 — Reason: usuario compartió el póster del evento y 2 links de Google Maps (`share.google/oWAHFcFMPlNHjam04` → resuelve a búsqueda "unidep tampico"; `share.google/6wqnDVH8E86xSuiK8` → resuelve a búsqueda "parque mendez"). **Advertencia de urgencia:** hoy es 2026-07-19, el evento empieza en 3 días (2026-07-22) — F2 a F7 deben completarse antes de esa fecha, prioridad máxima a llaves de Supabase y alta de productos.
