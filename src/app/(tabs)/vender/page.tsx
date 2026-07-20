@@ -6,7 +6,7 @@ import { listarProductos, type Producto } from "@/lib/productos";
 import { calcularStockSede } from "@/lib/stock";
 import { registrarVenta, totalTicket, type LineaTicket } from "@/lib/ventas";
 import TicketBar from "./TicketBar";
-import PantallaCobro from "./PantallaCobro";
+import PantallaCobro from "@/components/PantallaCobro";
 
 export default function VenderPage() {
   const sede = useSedeActual();

@@ -81,10 +81,10 @@ Si algo bloquea una fase (ej. falta de llaves de Supabase, decisión de negocio 
 
 | Field | Value |
 |-------|-------|
-| Current phase | F5 (Inflable con timers locales, alarmas por sede, wake lock) — no iniciada |
-| Last completed phase | F4 (Resumen compartido con polling) |
+| Current phase | F6 (Caja: fondo, retiros, corte con diferencia) — no iniciada |
+| Last completed phase | F5 (Inflable con timers locales, alarmas por sede, wake lock) |
 | Last completed on | 2026-07-20 |
-| Next action | Construir Inflable: registrar niño (nombre, responsable, 15/30/45/60 min con precio de precios_inflable, cobra en el acto), tarjetas con cuenta regresiva local, alarma solo de mi sede (Web Audio + vibración), wake lock, sección "Otra sede" sin alarma |
+| Next action | Construir Caja: efectivo teórico de mi sede en grande (fondos + ventas efectivo − retiros), botones Registrar fondo / Retiro, Corte con diferencia contra el teórico en verde/rojo |
 | Blocking items | Ninguno — Supabase real conectado y verificado (lectura + escritura) el 2026-07-20 |
 | **Fecha límite real** | **Evento (Festival Nacional Minibasket 2026 MX) empieza 2026-07-22 en Tampico, Tamaulipas — quedan 2 días para F5–F7** |
 | Sedes reales | Sede A = UNIDEP Tampico, Sede B = Parque Méndez (confirmado 2026-07-19, ver CLAUDE.md sección 1 y Notes and Decisions) |
