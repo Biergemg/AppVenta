@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { SEDES, type SedeId } from "@/lib/sede";
-import { actualizarProducto, entradaMercancia, type Producto } from "@/lib/productos";
+import {
+  actualizarProducto,
+  borrarProducto,
+  entradaMercancia,
+  type Producto,
+} from "@/lib/productos";
 
 export default function ListaProductos({
   productos,
@@ -41,6 +46,8 @@ function FilaProducto({
   const [precio, setPrecio] = useState(String(producto.precio_venta));
   const [guardando, setGuardando] = useState(false);
   const [mostrarEntrada, setMostrarEntrada] = useState(false);
+  const [confirmandoBorrar, setConfirmandoBorrar] = useState(false);
+  const [borrando, setBorrando] = useState(false);
   const [mensaje, setMensaje] = useState<{ tipo: "ok" | "error"; texto: string } | null>(
     null
   );
@@ -73,6 +80,22 @@ function FilaProducto({
       onCambio();
     } catch {
       setMensaje({ tipo: "error", texto: "Sin internet. Reintenta." });
+    }
+  }
+
+  async function confirmarBorrar() {
+    setBorrando(true);
+    try {
+      await borrarProducto(producto.id);
+      onCambio();
+    } catch (e) {
+      setConfirmandoBorrar(false);
+      setMensaje({
+        tipo: "error",
+        texto: e instanceof Error ? e.message : "Sin internet. Reintenta.",
+      });
+    } finally {
+      setBorrando(false);
     }
   }
 
@@ -143,6 +166,37 @@ function FilaProducto({
             onCambio();
           }}
         />
+      )}
+
+      {!confirmandoBorrar ? (
+        <button
+          onClick={() => setConfirmandoBorrar(true)}
+          className="mt-2 min-h-14 w-full rounded-2xl text-sm font-black text-red-700"
+        >
+          Borrar producto
+        </button>
+      ) : (
+        <div className="mt-2 flex flex-col gap-2 rounded-2xl bg-red-50 p-3">
+          <p className="text-sm font-bold text-red-800">
+            ¿Seguro? Esto borra el producto por completo. Si ya tiene ventas, no se
+            podrá.
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setConfirmandoBorrar(false)}
+              className="min-h-14 flex-1 rounded-2xl border border-zinc-300 bg-white font-black"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={confirmarBorrar}
+              disabled={borrando}
+              className="min-h-14 flex-1 rounded-2xl bg-red-700 font-black text-white disabled:opacity-50"
+            >
+              {borrando ? "Borrando..." : "Sí, borrar"}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -54,6 +54,28 @@ export async function actualizarProducto(
   if (error) throw error;
 }
 
+export async function borrarProducto(id: number): Promise<void> {
+  const { count, error: errorVentas } = await supabase
+    .from("ventas")
+    .select("id", { count: "exact", head: true })
+    .eq("producto_id", id);
+  if (errorVentas) throw errorVentas;
+  if (count && count > 0) {
+    throw new Error(
+      "Este producto ya tiene ventas registradas y no se puede borrar. Desactívalo en su lugar."
+    );
+  }
+
+  const { error: errorMov } = await supabase
+    .from("inventario_mov")
+    .delete()
+    .eq("producto_id", id);
+  if (errorMov) throw errorMov;
+
+  const { error } = await supabase.from("productos").delete().eq("id", id);
+  if (error) throw error;
+}
+
 export async function entradaMercancia(input: {
   producto_id: number;
   sede: SedeId;
