@@ -1,10 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import { useSedeActual } from "@/lib/useSede";
 import { listarProductos, type Producto } from "@/lib/productos";
 import { calcularStockSede } from "@/lib/stock";
 import { registrarVenta, totalTicket, type LineaTicket } from "@/lib/ventas";
+import { imagenProducto } from "@/lib/imagenesProductos";
 import TicketBar from "./TicketBar";
 import PantallaCobro from "@/components/PantallaCobro";
 
@@ -107,17 +109,33 @@ export default function VenderPage() {
         {productos.map((p) => {
           const disponible = stockDisponible(p);
           const agotado = disponible <= 0;
+          const imagen = imagenProducto(p.nombre);
           return (
             <button
               key={p.id}
               onClick={() => agregar(p)}
               disabled={agotado}
-              className={`min-h-28 rounded-3xl border p-3 flex flex-col items-center justify-center gap-1 text-center shadow-sm ${
+              className={`min-h-32 rounded-3xl border p-3 flex flex-col items-center justify-center gap-1 text-center shadow-sm ${
                 agotado
                   ? "border-zinc-200 bg-zinc-100 text-zinc-400"
                   : "border-[var(--line)] bg-white text-[var(--foreground)] active:bg-[var(--blue-soft)]"
               }`}
             >
+              {imagen && (
+                <div
+                  className={`relative mb-1 h-16 w-16 shrink-0 ${
+                    agotado ? "opacity-40 grayscale" : ""
+                  }`}
+                >
+                  <Image
+                    src={imagen}
+                    alt=""
+                    fill
+                    sizes="64px"
+                    className="rounded-xl object-contain"
+                  />
+                </div>
+              )}
               <span className="line-clamp-2 break-words text-lg font-black leading-tight">
                 {p.nombre}
               </span>

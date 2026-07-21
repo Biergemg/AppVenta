@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { SEDES, type SedeId } from "@/lib/sede";
 import {
   actualizarProducto,
@@ -8,6 +9,7 @@ import {
   entradaMercancia,
   type Producto,
 } from "@/lib/productos";
+import { imagenProducto } from "@/lib/imagenesProductos";
 
 export default function ListaProductos({
   productos,
@@ -99,10 +101,25 @@ function FilaProducto({
     }
   }
 
+  const imagen = imagenProducto(producto.nombre);
+
   return (
     <div className={`soft-panel p-3 ${producto.activo ? "" : "opacity-60"}`}>
       <div className="flex items-center justify-between gap-2">
-        <p className="min-w-0 break-words text-lg font-black">{producto.nombre}</p>
+        <div className="flex min-w-0 items-center gap-2">
+          {imagen && (
+            <div className="relative h-10 w-10 shrink-0">
+              <Image
+                src={imagen}
+                alt=""
+                fill
+                sizes="40px"
+                className="rounded-lg object-contain"
+              />
+            </div>
+          )}
+          <p className="min-w-0 break-words text-lg font-black">{producto.nombre}</p>
+        </div>
         <button
           onClick={toggleActivo}
           className="min-h-14 rounded-2xl px-3 text-sm font-black text-[var(--muted)]"
