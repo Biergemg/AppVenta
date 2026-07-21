@@ -115,30 +115,36 @@ export default function VenderPage() {
               key={p.id}
               onClick={() => agregar(p)}
               disabled={agotado}
-              className={`min-h-32 rounded-3xl border p-3 flex flex-col items-center justify-center gap-1 text-center shadow-sm ${
+              className={`min-h-40 rounded-3xl border p-2 flex flex-col items-center justify-center gap-0.5 text-center shadow-sm ${
                 agotado
                   ? "border-zinc-200 bg-zinc-100 text-zinc-400"
                   : "border-[var(--line)] bg-white text-[var(--foreground)] active:bg-[var(--blue-soft)]"
               }`}
             >
-              {imagen && (
-                <div
-                  className={`relative mb-1 h-16 w-16 shrink-0 ${
-                    agotado ? "opacity-40 grayscale" : ""
-                  }`}
-                >
-                  <Image
-                    src={imagen}
-                    alt=""
-                    fill
-                    sizes="64px"
-                    className="rounded-xl object-contain"
-                  />
-                </div>
+              {imagen ? (
+                <>
+                  <div
+                    className={`relative mb-1 h-24 w-24 shrink-0 ${
+                      agotado ? "opacity-40 grayscale" : ""
+                    }`}
+                  >
+                    <Image
+                      src={imagen}
+                      alt=""
+                      fill
+                      sizes="96px"
+                      className="rounded-xl object-contain"
+                    />
+                  </div>
+                  <span className="line-clamp-1 break-words text-sm font-bold leading-tight text-[var(--muted)]">
+                    {p.nombre}
+                  </span>
+                </>
+              ) : (
+                <span className="line-clamp-2 break-words text-lg font-black leading-tight">
+                  {p.nombre}
+                </span>
               )}
-              <span className="line-clamp-2 break-words text-lg font-black leading-tight">
-                {p.nombre}
-              </span>
               <span className="text-2xl font-black tabular-nums text-[var(--primary-strong)]">
                 ${p.precio_venta.toFixed(2)}
               </span>
