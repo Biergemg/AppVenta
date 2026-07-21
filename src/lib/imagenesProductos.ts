@@ -23,6 +23,9 @@ const IMAGENES: Record<string, string> = {
   "bolsitas-de-frituras": "/productos/bolsitas-de-frituras.jpg",
   "mini-pizza": "/productos/mini-pizza.webp",
   "gatorade-350-ml": "/productos/gatorade-350-ml.webp",
+  "coca-cola-355ml": "/productos/coca-cola-355ml.webp",
+  "gatorade-500ml": "/productos/gatorade-500ml.webp",
+  "rancheritos": "/productos/rancheritos.jpg",
 };
 
 export function imagenProducto(nombre: string): string | null {
