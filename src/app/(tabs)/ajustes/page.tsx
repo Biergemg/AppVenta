@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { borrarSede } from "@/lib/sede";
+import { borrarSede, nombreSede } from "@/lib/sede";
+import { useSedeActual } from "@/lib/useSede";
 import { listarProductos, type Producto } from "@/lib/productos";
 import { listarPreciosInflable, type PrecioInflable } from "@/lib/preciosInflable";
 import FormularioProducto from "./FormularioProducto";
@@ -14,6 +15,7 @@ type Estado = "probando" | "ok" | "error";
 
 export default function AjustesPage() {
   const router = useRouter();
+  const sede = useSedeActual();
   const [estado, setEstado] = useState<Estado>("probando");
   const [detalle, setDetalle] = useState("");
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -66,6 +68,19 @@ export default function AjustesPage() {
       </div>
 
       <section className="section-panel p-4">
+        <h2 className="mb-2 text-lg font-black">Tu sede</h2>
+        <p className="mb-3 text-lg font-bold">
+          {sede ? nombreSede(sede) : "Sin elegir"}
+        </p>
+        <button
+          onClick={cambiarSede}
+          className="secondary-action min-h-14 w-full rounded-2xl text-lg font-black"
+        >
+          Cambiar de sede
+        </button>
+      </section>
+
+      <section className="section-panel p-4">
         <h2 className="mb-2 text-lg font-black">Conexion</h2>
         {estado === "probando" && (
           <p className="font-bold text-[var(--muted)]">Probando conexion...</p>
@@ -89,13 +104,6 @@ export default function AjustesPage() {
       <FormularioProducto onGuardado={cargarDatos} />
       <ListaProductos productos={productos} onCambio={cargarDatos} />
       <PreciosInflable precios={precios} onCambio={cargarDatos} />
-
-      <button
-        onClick={cambiarSede}
-        className="secondary-action min-h-14 rounded-2xl text-lg font-black"
-      >
-        Cambiar de sede
-      </button>
     </main>
   );
 }
