@@ -77,9 +77,20 @@ export async function extenderTiempo(input: {
   precio: number;
   pagoCon: number;
 }): Promise<void> {
+  const { data: actual, error: errorLectura } = await supabase
+    .from("tiempos")
+    .select("minutos, estado")
+    .eq("id", input.tiempo.id)
+    .single();
+  if (errorLectura) throw errorLectura;
+  if (actual.estado !== "activo") {
+    throw new Error("Este niño ya salió. Actualiza la pantalla.");
+  }
+
+  const minutosNuevos = actual.minutos + input.minutosExtra;
   const { error: errorUpdate } = await supabase
     .from("tiempos")
-    .update({ minutos: input.tiempo.minutos + input.minutosExtra })
+    .update({ minutos: minutosNuevos })
     .eq("id", input.tiempo.id);
   if (errorUpdate) throw errorUpdate;
 
@@ -98,7 +109,13 @@ export async function extenderTiempo(input: {
     metodo: "efectivo",
     tiempo_id: input.tiempo.id,
   });
-  if (errorVenta) throw errorVenta;
+  if (errorVenta) {
+    await supabase
+      .from("tiempos")
+      .update({ minutos: actual.minutos })
+      .eq("id", input.tiempo.id);
+    throw errorVenta;
+  }
 }
 
 export async function terminarTiempo(id: number): Promise<void> {

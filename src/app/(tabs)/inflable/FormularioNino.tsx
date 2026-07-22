@@ -54,12 +54,14 @@ export default function FormularioNino({
         value={nino}
         onChange={(e) => setNino(e.target.value)}
         placeholder="Nombre del niño"
+        aria-label="Nombre del niño"
         className="min-h-14 rounded-2xl border px-4 text-lg font-semibold"
       />
       <input
         value={responsable}
         onChange={(e) => setResponsable(e.target.value)}
         placeholder="Responsable o telefono"
+        aria-label="Responsable o telefono"
         className="min-h-14 rounded-2xl border px-4 text-lg font-semibold"
       />
 

@@ -41,7 +41,10 @@ export async function crearProducto(input: {
     { producto_id: producto.id, sede: 1, tipo: "inicial", cantidad: input.stockA },
     { producto_id: producto.id, sede: 2, tipo: "inicial", cantidad: input.stockB },
   ]);
-  if (errorMov) throw errorMov;
+  if (errorMov) {
+    await supabase.from("productos").delete().eq("id", producto.id);
+    throw errorMov;
+  }
 
   return producto as Producto;
 }

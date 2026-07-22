@@ -30,15 +30,17 @@ export default function InflablePage() {
   const [alarmaBloqueada, setAlarmaBloqueada] = useState(false);
 
   const cargar = useCallback(() => {
-    listarPreciosInflable()
-      .then((p) => {
-        setPrecios(p);
-        setErrorCarga("");
-      })
-      .catch(() => setErrorCarga("Sin internet. Reintenta."));
-    listarTiemposActivos()
-      .then(setTiempos)
-      .catch(() => setErrorCarga("Sin internet. Reintenta."));
+    Promise.allSettled([listarPreciosInflable(), listarTiemposActivos()]).then(
+      ([precios, tiempos]) => {
+        if (precios.status === "fulfilled") setPrecios(precios.value);
+        if (tiempos.status === "fulfilled") setTiempos(tiempos.value);
+        setErrorCarga(
+          precios.status === "rejected" || tiempos.status === "rejected"
+            ? "Sin internet. Reintenta."
+            : ""
+        );
+      }
+    );
   }, []);
 
   useEffect(() => {

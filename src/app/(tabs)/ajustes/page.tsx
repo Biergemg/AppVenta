@@ -20,14 +20,20 @@ export default function AjustesPage() {
   const [detalle, setDetalle] = useState("");
   const [productos, setProductos] = useState<Producto[]>([]);
   const [precios, setPrecios] = useState<PrecioInflable[]>([]);
+  const [errorDatos, setErrorDatos] = useState("");
 
   const cargarDatos = useCallback(() => {
-    listarProductos()
-      .then(setProductos)
-      .catch(() => {});
-    listarPreciosInflable()
-      .then(setPrecios)
-      .catch(() => {});
+    Promise.allSettled([listarProductos(), listarPreciosInflable()]).then(
+      ([productos, precios]) => {
+        if (productos.status === "fulfilled") setProductos(productos.value);
+        if (precios.status === "fulfilled") setPrecios(precios.value);
+        setErrorDatos(
+          productos.status === "rejected" || precios.status === "rejected"
+            ? "No se pudo cargar productos o precios. Sin internet. Reintenta."
+            : ""
+        );
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -100,6 +106,12 @@ export default function AjustesPage() {
           </div>
         )}
       </section>
+
+      {errorDatos && (
+        <p className="rounded-xl bg-red-100 p-3 text-sm font-semibold text-red-800">
+          {errorDatos}
+        </p>
+      )}
 
       <FormularioProducto onGuardado={cargarDatos} />
       <ListaProductos productos={productos} onCambio={cargarDatos} />

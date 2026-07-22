@@ -33,6 +33,14 @@ export default function FormularioProducto({
       setMensaje({ tipo: "error", texto: "El precio de venta debe ser mayor a 0." });
       return;
     }
+    if (costoNum < 0) {
+      setMensaje({ tipo: "error", texto: "El costo no puede ser negativo." });
+      return;
+    }
+    if (Number(stockA) < 0 || Number(stockB) < 0) {
+      setMensaje({ tipo: "error", texto: "El stock inicial no puede ser negativo." });
+      return;
+    }
     setGuardando(true);
     setMensaje(null);
     try {

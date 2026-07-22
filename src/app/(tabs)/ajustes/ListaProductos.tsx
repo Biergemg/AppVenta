@@ -61,11 +61,21 @@ function FilaProducto({
   }, [mensaje]);
 
   async function guardarPrecios() {
+    const costoNum = Number(costo) || 0;
+    const precioNum = Number(precio) || 0;
+    if (precioNum <= 0) {
+      setMensaje({ tipo: "error", texto: "El precio debe ser mayor a 0." });
+      return;
+    }
+    if (costoNum < 0) {
+      setMensaje({ tipo: "error", texto: "El costo no puede ser negativo." });
+      return;
+    }
     setGuardando(true);
     try {
       await actualizarProducto(producto.id, {
-        costo_compra: Number(costo) || 0,
-        precio_venta: Number(precio) || 0,
+        costo_compra: costoNum,
+        precio_venta: precioNum,
       });
       setMensaje({ tipo: "ok", texto: "Guardado" });
       onCambio();

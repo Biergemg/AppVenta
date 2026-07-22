@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { SEDES, type SedeId } from "@/lib/sede";
 import { redondearDinero } from "@/lib/dinero";
+import { seleccionarTodo } from "@/lib/seleccionarTodo";
 
 type ProductoRanking = { producto_id: number; nombre: string; cantidad: number };
 type FilaInventario = {
@@ -30,28 +31,40 @@ export type ResumenData = {
 
 /** Todo se calcula al vuelo a partir de las tablas crudas — nunca se guardan totales. */
 export async function calcularResumen(): Promise<ResumenData> {
-  const [
-    { data: ventas, error: e1 },
-    { data: productos, error: e2 },
-    { data: movs, error: e3 },
-    { data: tiempos, error: e4 },
-  ] = await Promise.all([
-    supabase
-      .from("ventas")
-      .select("sede, tipo, producto_id, cantidad, precio_unit, costo_unit, total, ts"),
-    supabase.from("productos").select("id, nombre, activo"),
-    supabase.from("inventario_mov").select("producto_id, sede, tipo, cantidad"),
-    supabase.from("tiempos").select("sede"),
+  const [v, prods, movimientos, tiemposRows] = await Promise.all([
+    seleccionarTodo<{
+      sede: SedeId;
+      tipo: string;
+      producto_id: number | null;
+      cantidad: number;
+      precio_unit: number;
+      costo_unit: number;
+      total: number;
+      ts: string;
+    }>((desde, hasta) =>
+      supabase
+        .from("ventas")
+        .select("sede, tipo, producto_id, cantidad, precio_unit, costo_unit, total, ts")
+        .range(desde, hasta)
+    ),
+    seleccionarTodo<{ id: number; nombre: string; activo: boolean }>((desde, hasta) =>
+      supabase.from("productos").select("id, nombre, activo").range(desde, hasta)
+    ),
+    seleccionarTodo<{
+      producto_id: number;
+      sede: SedeId;
+      tipo: string;
+      cantidad: number;
+    }>((desde, hasta) =>
+      supabase
+        .from("inventario_mov")
+        .select("producto_id, sede, tipo, cantidad")
+        .range(desde, hasta)
+    ),
+    seleccionarTodo<{ sede: SedeId }>((desde, hasta) =>
+      supabase.from("tiempos").select("sede").range(desde, hasta)
+    ),
   ]);
-  if (e1) throw e1;
-  if (e2) throw e2;
-  if (e3) throw e3;
-  if (e4) throw e4;
-
-  const v = ventas ?? [];
-  const prods = productos ?? [];
-  const movimientos = movs ?? [];
-  const tiemposRows = tiempos ?? [];
 
   const nombrePorId = new Map(prods.map((p) => [p.id, p.nombre]));
 
