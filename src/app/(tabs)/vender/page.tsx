@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { useSedeActual } from "@/lib/useSede";
 import { listarProductos, type Producto } from "@/lib/productos";
-import { calcularStockSede } from "@/lib/stock";
+import { calcularStockSede, productosAsignadosSede } from "@/lib/stock";
 import { registrarVenta, totalTicket, type LineaTicket } from "@/lib/ventas";
 import { imagenProducto } from "@/lib/imagenesProductos";
 import { esComida } from "@/lib/categoriaProductos";
@@ -15,6 +15,7 @@ export default function VenderPage() {
   const sede = useSedeActual();
   const [productos, setProductos] = useState<Producto[]>([]);
   const [stock, setStock] = useState<Record<number, number>>({});
+  const [asignados, setAsignados] = useState<Set<number> | null>(null);
   const [ticket, setTicket] = useState<LineaTicket[]>([]);
   const [cobroAbierto, setCobroAbierto] = useState(false);
   const [toast, setToast] = useState("");
@@ -33,6 +34,9 @@ export default function VenderPage() {
     calcularStockSede(sede)
       .then(setStock)
       .catch(() => setErrorCarga("Sin internet. Reintenta."));
+    productosAsignadosSede(sede)
+      .then(setAsignados)
+      .catch(() => {});
   }, [sede]);
 
   useEffect(() => {
@@ -107,7 +111,8 @@ export default function VenderPage() {
             Todavía no hay productos. Dalos de alta en Ajustes.
           </p>
         )}
-        {[...productos]
+        {productos
+          .filter((p) => !asignados || asignados.has(p.id))
           .sort((a, b) => {
             const comidaA = esComida(a.nombre) ? 1 : 0;
             const comidaB = esComida(b.nombre) ? 1 : 0;

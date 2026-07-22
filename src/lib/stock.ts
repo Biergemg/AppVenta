@@ -27,3 +27,26 @@ export async function calcularStockSede(
   }
   return stock;
 }
+
+/**
+ * Productos que alguna vez recibieron inventario en esta sede (inicial, entrada
+ * o ajuste), sin restar ventas. Sirve para saber qué productos "son de aquí",
+ * distinto del stock actual que puede llegar a 0 por ventas normales.
+ */
+export async function productosAsignadosSede(sede: SedeId): Promise<Set<number>> {
+  const { data, error } = await supabase
+    .from("inventario_mov")
+    .select("producto_id, cantidad")
+    .eq("sede", sede);
+  if (error) throw error;
+
+  const asignado: Record<number, number> = {};
+  for (const m of data ?? []) {
+    asignado[m.producto_id] = (asignado[m.producto_id] ?? 0) + m.cantidad;
+  }
+  return new Set(
+    Object.entries(asignado)
+      .filter(([, total]) => total > 0)
+      .map(([id]) => Number(id))
+  );
+}
