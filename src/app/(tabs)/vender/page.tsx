@@ -7,6 +7,7 @@ import { listarProductos, type Producto } from "@/lib/productos";
 import { calcularStockSede } from "@/lib/stock";
 import { registrarVenta, totalTicket, type LineaTicket } from "@/lib/ventas";
 import { imagenProducto } from "@/lib/imagenesProductos";
+import { esComida } from "@/lib/categoriaProductos";
 import TicketBar from "./TicketBar";
 import PantallaCobro from "@/components/PantallaCobro";
 
@@ -106,7 +107,16 @@ export default function VenderPage() {
             Todavía no hay productos. Dalos de alta en Ajustes.
           </p>
         )}
-        {productos.map((p) => {
+        {[...productos]
+          .sort((a, b) => {
+            const comidaA = esComida(a.nombre) ? 1 : 0;
+            const comidaB = esComida(b.nombre) ? 1 : 0;
+            if (comidaA !== comidaB) return comidaA - comidaB;
+            const agotadoA = stockDisponible(a) <= 0 ? 1 : 0;
+            const agotadoB = stockDisponible(b) <= 0 ? 1 : 0;
+            return agotadoA - agotadoB;
+          })
+          .map((p) => {
           const disponible = stockDisponible(p);
           const agotado = disponible <= 0;
           const imagen = imagenProducto(p.nombre);
