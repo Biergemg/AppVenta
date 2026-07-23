@@ -52,26 +52,38 @@ export default function ResumenPage() {
         </p>
       )}
 
-      <section className="section-panel grid grid-cols-2 gap-4 p-5 text-center">
-        <div>
-          <p className="mini-label">Venta total</p>
-          <p className="text-4xl font-black tabular-nums text-[var(--primary-strong)]">
-            ${datos.ventaTotal.toFixed(2)}
-          </p>
+      <section className="section-panel p-5">
+        <div className="grid grid-cols-2 gap-4 text-center">
+          <div>
+            <p className="mini-label">Venta total del evento</p>
+            <p className="text-4xl font-black tabular-nums text-[var(--primary-strong)]">
+              ${datos.ventaTotal.toFixed(2)}
+            </p>
+          </div>
+          <div>
+            <p className="mini-label">Ganancia del evento</p>
+            <p className="text-4xl font-black tabular-nums text-[var(--blue)]">
+              ${datos.gananciaTotal.toFixed(2)}
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="mini-label">Ganancia</p>
-          <p className="text-4xl font-black tabular-nums text-[var(--blue)]">
-            ${datos.gananciaTotal.toFixed(2)}
-          </p>
-        </div>
-        <div className="col-span-2 grid grid-cols-2 gap-2 text-sm font-semibold text-[var(--muted)] tabular-nums">
+
+        <p className="mt-4 text-xs font-bold uppercase tracking-wide text-[var(--muted)]">
+          Ese mismo total, partido por sede
+        </p>
+        <div className="mt-1 grid grid-cols-2 gap-2 text-sm font-semibold tabular-nums">
           <p>
             {SEDES[0].nombre}: ${datos.porSede[1].venta.toFixed(2)}
           </p>
           <p>
             {SEDES[1].nombre}: ${datos.porSede[2].venta.toFixed(2)}
           </p>
+        </div>
+
+        <p className="mt-3 text-xs font-bold uppercase tracking-wide text-[var(--muted)]">
+          Ese mismo total, partido por tipo de producto
+        </p>
+        <div className="mt-1 grid grid-cols-2 gap-2 text-sm font-semibold tabular-nums">
           <p>Bebidas: ${datos.porTipo.bebida.toFixed(2)}</p>
           <p>Inflable: ${datos.porTipo.inflable.toFixed(2)}</p>
         </div>
@@ -140,14 +152,21 @@ export default function ResumenPage() {
       </section>
 
       <section className="section-panel p-4">
-        <h2 className="mb-3 text-lg font-black">Inflable</h2>
+        <h2 className="mb-1 text-lg font-black">Inflable</h2>
+        <p className="mb-3 text-xs font-semibold text-[var(--muted)]">
+          Ya incluido arriba en &ldquo;Ganancia del evento&rdquo; e &ldquo;Inflable&rdquo;
+          por tipo — esto es solo el detalle del inflable.
+        </p>
         <p className="tabular-nums">
           Niños atendidos: <strong>{datos.inflable.ninosAtendidos}</strong>
         </p>
         <p className="tabular-nums">
-          Ingreso total: <strong>${datos.inflable.ingresoTotal.toFixed(2)}</strong>
+          Ingreso del inflable: <strong>${datos.inflable.ingresoTotal.toFixed(2)}</strong>
         </p>
-        <p className="text-sm font-semibold text-[var(--muted)] tabular-nums">
+        <p className="mt-1 text-xs font-bold uppercase tracking-wide text-[var(--muted)]">
+          Ese ingreso del inflable, partido por sede
+        </p>
+        <p className="text-sm font-semibold tabular-nums">
           {SEDES[0].nombre}: ${datos.inflable.porSede[1].toFixed(2)} ·{" "}
           {SEDES[1].nombre}: ${datos.inflable.porSede[2].toFixed(2)}
         </p>
